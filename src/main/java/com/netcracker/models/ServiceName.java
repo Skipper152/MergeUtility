@@ -68,9 +68,12 @@ public class ServiceName extends AbstractModel {
         if (serviceName == null) {
             checkList.addLast("service_name");
         }
-        //if () {
-
-        //}
-        return null;
+        if (serviceName1 == null) {
+            checkList.addLast("service_name_1");
+        }
+        if (serviceName2 == null) {
+            checkList.addLast("service_name_2");
+        }
+        return checkList;
     }
 }

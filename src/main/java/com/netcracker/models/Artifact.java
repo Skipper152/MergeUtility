@@ -109,14 +109,15 @@ public class Artifact extends AbstractModel {
     @Override
     LinkedList<String> validate() {
         LinkedList<String> checkList = new LinkedList<>();
-        if (mvns == null) {
+        if (mvns == null && (hashes != null || files != null)) {
+            if (hashes == null) {
+                checkList.addLast("hashes");
+            }
+            if (files == null) {
+                checkList.addLast("file");
+            }
+        } else if (mvns == null) {
             checkList.addLast("mvn");
-        }
-        if (hashes == null) {
-            checkList.addLast("hashes");
-        }
-        if (files == null) {
-            checkList.addLast("file");
         }
         if (targetRepository == null) {
             checkList.addLast("target_repository");

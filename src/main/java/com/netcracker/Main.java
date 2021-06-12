@@ -18,11 +18,6 @@ public class Main {
         JSONModel jsonModel1 = objectMapper.readValue(new File("C:\\Users\\Skipper\\IdeaProjects\\2021\\03\\MergeUtility\\src\\main\\resources\\json-files\\v2_json_sample.json"), JSONModel.class);
         JSONModel jsonModel2 = objectMapper.readValue(new File("C:\\Users\\Skipper\\IdeaProjects\\2021\\03\\MergeUtility\\src\\main\\resources\\json-files\\v2_json_sample 2.json"), JSONModel.class);
 
-        //OperationsForJSON.checkFields(jsonModel1);
-        //OperationsForJSON.checkFields(jsonModel2);
-
-        //System.out.println(metadata);
-
         System.out.println(jsonModel1);
         System.out.println(jsonModel2);
 
