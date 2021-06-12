@@ -2,8 +2,12 @@ package com.netcracker;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.netcracker.models.JSONModel;
 import org.apache.tomcat.util.json.JSONParser;
+import org.json.JSONObject;
+// org.json
+
 
 import java.io.File;
 import java.io.IOException;
@@ -16,6 +20,8 @@ public class Main {
 
         //OperationsForJSON.checkFields(jsonModel1);
         //OperationsForJSON.checkFields(jsonModel2);
+
+        //System.out.println(metadata);
 
         System.out.println(jsonModel1);
         System.out.println(jsonModel2);

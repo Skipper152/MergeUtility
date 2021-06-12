@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.LinkedList;
-import java.util.zip.CheckedInputStream;
 
 // array, mandatory - list of direct urls. always contains only one element
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -37,8 +36,9 @@ public class File extends AbstractModel {
     @Override
     LinkedList<String> validate() {
         LinkedList<String> checkList = new LinkedList<>();
-
-
+        if (file == null) {
+            checkList.addLast("file");
+        }
         return checkList;
     }
 }
