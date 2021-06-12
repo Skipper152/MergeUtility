@@ -1,0 +1,72 @@
+package com.netcracker.models;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.util.LinkedList;
+
+// object, optional
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class Common extends AbstractModel {
+    // string, mandatory - parameter value
+    @JsonProperty("some-param")
+    private String someParam;
+
+    @JsonProperty("some-other-param")
+    private String someOtherParam;
+
+    @JsonProperty("some-else-param")
+    private String someElseParam;
+
+    public Common() {
+
+    }
+
+    public Common(String someParam, String someOtherParam, String someElseParam) {
+        this.someParam = someParam;
+        this.someOtherParam = someOtherParam;
+        this.someElseParam = someElseParam;
+    }
+
+    public String getSomeParam() {
+        return someParam;
+    }
+
+    public void setSomeParam(String someParam) {
+        this.someParam = someParam;
+    }
+
+    public String getSomeOtherParam() {
+        return someOtherParam;
+    }
+
+    public void setSomeOtherParam(String someOtherParam) {
+        this.someOtherParam = someOtherParam;
+    }
+
+    public String getSomeElseParam() {
+        return someElseParam;
+    }
+
+    public void setSomeElseParam(String someElseParam) {
+        this.someElseParam = someElseParam;
+    }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "\"someParam:\" " + "\"" + someParam + "\"" +
+                ", \"someOtherParam:\" " + "\"" + someOtherParam + "\"" +
+                ", \"someElseParam:\" " + "\"" + someElseParam + "\"" +
+                '}';
+    }
+
+    @Override
+    LinkedList<String> validate() {
+        LinkedList<String> checkList = new LinkedList<>();
+        if (someParam == null) {
+            checkList.addLast("some_param");
+        }
+        return checkList;
+    }
+}
