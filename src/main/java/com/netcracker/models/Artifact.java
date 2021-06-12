@@ -16,7 +16,7 @@ public class Artifact extends AbstractModel {
     // string, optional
     @JsonProperty("service-short-name")
     private String serviceShortName;
-
+//sdfsdf
     // string optional
     @JsonProperty("service_name")
     private String serviceName;
