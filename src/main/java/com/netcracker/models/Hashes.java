@@ -3,7 +3,7 @@ package com.netcracker.models;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.LinkedList;
+import java.util.HashMap;
 
 // object, mandatory
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -50,14 +50,10 @@ public class Hashes extends AbstractModel {
     }
 
     @Override
-    LinkedList<String> validate() {
-        LinkedList<String> checkList = new LinkedList<>();
-        if (sha1 == null) {
-            checkList.addLast("sha1");
-        }
-        if (sha256 == null) {
-            checkList.addLast("sha256");
-        }
-        return checkList;
+    public HashMap<String,Boolean> validate() {
+        HashMap<String,Boolean> checkMap = new HashMap<>();
+        checkMap.put("sha1", sha1 == null);
+        checkMap.put("sha256", sha256 == null);
+        return checkMap;
     }
 }

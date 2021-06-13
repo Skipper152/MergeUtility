@@ -3,6 +3,7 @@ package com.netcracker.models;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 
 // object, mandatory
@@ -136,26 +137,14 @@ public class MVN extends AbstractModel {
     }
 
     @Override
-    LinkedList<String> validate() {
-        LinkedList<String> checkList = new LinkedList<>();
-        if (groupId == null) {
-            checkList.addLast("groupId");
-        }
-        if (artifactId == null) {
-            checkList.addLast("artifactId");
-        }
-        if (version == null) {
-            checkList.addLast("version");
-        }
-        if (mvnType == null) {
-            checkList.addLast("mvn_type");
-        }
-        if (mvnRepository == null) {
-            checkList.addLast("mvn_repository");
-        }
-        if (hashes == null) {
-            checkList.addLast("hashes");
-        }
-        return checkList;
+    public HashMap<String,Boolean> validate() {
+        HashMap<String,Boolean> checkMap = new HashMap<>();
+        checkMap.put("groupId", groupId == null);
+        checkMap.put("artifactId", artifactId == null);
+        checkMap.put("version", version == null);
+        checkMap.put("mvn_type", mvnType == null);
+        checkMap.put("mvn_repository", mvnRepository == null);
+        checkMap.put("hashes", hashes == null);
+        return checkMap;
     }
 }

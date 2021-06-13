@@ -3,6 +3,7 @@ package com.netcracker.models;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 
 // object, optional
@@ -107,17 +108,11 @@ public class Script extends AbstractModel {
     }
 
     @Override
-    LinkedList<String> validate() {
-        LinkedList<String> checkList = new LinkedList<>();
-        if (scriptName == null) {
-            checkList.addLast("script_name");
-        }
-        if (hashes == null) {
-            checkList.addLast("hashes");
-        }
-        if (url == null) {
-            checkList.addLast("url");
-        }
-        return checkList;
+    public HashMap<String,Boolean> validate() {
+        HashMap<String,Boolean> checkMap = new HashMap<>();
+        checkMap.put("script_name", scriptName == null);
+        checkMap.put("hashes", hashes == null);
+        checkMap.put("url", url == null);
+        return checkMap;
     }
 }

@@ -3,7 +3,7 @@ package com.netcracker.models;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.LinkedList;
+import java.util.HashMap;
 
 // object, optional - describes rpm archive
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -78,17 +78,11 @@ public class RPM extends AbstractModel {
     }
 
     @Override
-    LinkedList<String> validate() {
-        LinkedList<String> checkList = new LinkedList<>();
-        if (url == null) {
-            checkList.addLast("url");
-        }
-        if (rpmRepositoryName == null) {
-            checkList.addLast("rpm_repository_name");
-        }
-        if (hashes == null) {
-            checkList.addLast("hashes");
-        }
-        return checkList;
+    public HashMap<String,Boolean> validate() {
+        HashMap<String,Boolean> checkMap = new HashMap<>();
+        checkMap.put("url", url == null);
+        checkMap.put("rpm_repository_name", rpmRepositoryName == null);
+        checkMap.put("hashes", hashes == null);
+        return checkMap;
     }
 }

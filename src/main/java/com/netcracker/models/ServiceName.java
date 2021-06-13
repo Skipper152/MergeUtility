@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.HashMap;
-import java.util.LinkedList;
 
 // object, optional
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -63,17 +62,9 @@ public class ServiceName extends AbstractModel {
     }
 
     @Override
-    LinkedList<String> validate() {
-        LinkedList<String> checkList = new LinkedList<>();
-        if (serviceName == null) {
-            checkList.addLast("service_name");
-        }
-        if (serviceName1 == null) {
-            checkList.addLast("service_name_1");
-        }
-        if (serviceName2 == null) {
-            checkList.addLast("service_name_2");
-        }
-        return checkList;
+    public HashMap<String,Boolean> validate() {
+        HashMap<String,Boolean> checkMap = new HashMap<>();
+        checkMap.put("service_name", serviceName == null);
+        return checkMap;
     }
 }

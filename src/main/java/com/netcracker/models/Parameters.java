@@ -3,10 +3,9 @@ package com.netcracker.models;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.LinkedList;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Parameters extends AbstractModel {
+public class Parameters {
     // object, optional
     @JsonProperty("common")
     private Common common;
@@ -46,13 +45,5 @@ public class Parameters extends AbstractModel {
                 "\"common\": " + common +
                 ", \"services\": " + services +
                 '}';
-    }
-
-    @Override
-    LinkedList<String> validate() {
-        LinkedList<String> checkList = new LinkedList<>();
-        //if ()
-
-        return checkList;
     }
 }

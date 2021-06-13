@@ -3,7 +3,7 @@ package com.netcracker.models;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.LinkedList;
+import java.util.HashMap;
 
 // object, optional
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -181,26 +181,14 @@ public class Service extends AbstractModel {
     }
 
     @Override
-    LinkedList<String> validate() {
-        LinkedList<String> checkList = new LinkedList<>();
-        if (serviceName == null) {
-            checkList.addLast("service_name");
-        }
-        if (artifactType == null) {
-            checkList.addLast("artifact_type");
-        }
-        if (dockerRegistry == null) {
-            checkList.addLast("docker_registry");
-        }
-        if (dockerImageName == null) {
-            checkList.addLast("docker_image_name");
-        }
-        if (dockerTag == null) {
-            checkList.addLast("docker_tag");
-        }
-        if (hashes == null) {
-            checkList.addLast("hashes");
-        }
-        return checkList;
+    public HashMap<String,Boolean> validate() {
+        HashMap<String,Boolean> checkMap = new HashMap<>();
+        checkMap.put("service_name", serviceName == null);
+        checkMap.put("artifact_type", artifactType == null);
+        checkMap.put("docker_registry", dockerRegistry == null);
+        checkMap.put("docker_image_name", dockerImageName == null);
+        checkMap.put("docker_tag", dockerTag == null);
+        checkMap.put("hashes", hashes == null);
+        return checkMap;
     }
 }

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.HashMap;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class JSONModel extends AbstractModel {
@@ -109,26 +109,14 @@ public class JSONModel extends AbstractModel {
     }
 
     @Override
-    LinkedList<String> validate() {
-        LinkedList<String> checkList = new LinkedList<>();
-        if (metadata == null) {
-            checkList.addLast("metadata");
-        }
-        if (services == null) {
-            checkList.addLast("services");
-        }
-        if (artifacts == null) {
-            checkList.addLast("artifacts");
-        }
-        if (scripts == null) {
-            checkList.addLast("script");
-        }
-        if (rpms == null) {
-            checkList.addLast("rpm");
-        }
-        if (parameters == null) {
-            checkList.addLast("parameters");
-        }
-        return checkList;
+    public HashMap<String,Boolean> validate() {
+        HashMap<String,Boolean> checkMap = new HashMap<>();
+        checkMap.put("metadata", metadata == null);
+        checkMap.put("services", services == null);
+        checkMap.put("artifacts", artifacts == null);
+        checkMap.put("script", scripts == null);
+        checkMap.put("rpm", rpms == null);
+        checkMap.put("parameters", parameters == null);
+        return checkMap;
     }
 }

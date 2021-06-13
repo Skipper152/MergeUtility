@@ -1,7 +1,7 @@
 package com.netcracker.models;
 
-import java.util.LinkedList;
+import java.util.HashMap;
 
 public abstract class AbstractModel {
-    abstract LinkedList<String> validate();
+    public abstract HashMap<String, Boolean> validate();
 }

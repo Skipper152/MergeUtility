@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.HashMap;
 
 // object, optional
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -107,21 +107,18 @@ public class Artifact extends AbstractModel {
     }
 
     @Override
-    LinkedList<String> validate() {
-        LinkedList<String> checkList = new LinkedList<>();
-        if (mvns == null && (hashes != null || files != null)) {
-            if (hashes == null) {
-                checkList.addLast("hashes");
-            }
-            if (files == null) {
-                checkList.addLast("file");
-            }
-        } else if (mvns == null) {
-            checkList.addLast("mvn");
+    public HashMap<String,Boolean> validate() {
+        HashMap<String,Boolean> checkMap = new HashMap<>();
+        if (mvns == null && (hashes != null ||
+                             files != null ||
+                             serviceShortName != null ||
+                             serviceName != null
+                            )) {
+            checkMap.put("hashes", hashes == null);
+            checkMap.put("file", files == null);
         }
-        if (targetRepository == null) {
-            checkList.addLast("target_repository");
-        }
-        return checkList;
+        checkMap.put("mvn", mvns == null);
+        checkMap.put("target_repository", targetRepository == null);
+        return checkMap;
     }
 }
