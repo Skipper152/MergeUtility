@@ -109,16 +109,12 @@ public class Artifact extends AbstractModel {
     @Override
     public HashMap<String,Boolean> validate() {
         HashMap<String,Boolean> checkMap = new HashMap<>();
-        if (mvns == null && (hashes != null ||
-                             files != null ||
-                             serviceShortName != null ||
-                             serviceName != null
-                            )) {
-            checkMap.put("hashes", hashes == null);
-            checkMap.put("file", files == null);
-        }
         checkMap.put("mvn", mvns == null);
         checkMap.put("target_repository", targetRepository == null);
+        checkMap.put("service-short-name", serviceShortName == null);
+        checkMap.put("service_name", serviceName == null);
+        checkMap.put("hashes", hashes == null);
+        checkMap.put("file", files == null);
         return checkMap;
     }
 }

@@ -3,9 +3,11 @@ package com.netcracker.models;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.HashMap;
+
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Parameters {
+public class Parameters extends AbstractModel {
     // object, optional
     @JsonProperty("common")
     private Common common;
@@ -45,5 +47,13 @@ public class Parameters {
                 "\"common\": " + common +
                 ", \"services\": " + services +
                 '}';
+    }
+
+    @Override
+    public HashMap<String, Boolean> validate() {
+        HashMap<String,Boolean> checkMap = new HashMap<>();
+        checkMap.put("common", common == null);
+        checkMap.put("services", services == null);
+        return checkMap;
     }
 }

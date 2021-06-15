@@ -64,9 +64,7 @@ public class Common extends AbstractModel {
     @Override
     public HashMap<String, Boolean> validate() {
         HashMap<String, Boolean> checkMap = new HashMap<>();
-        if (someParam == null) {
-            checkMap.put("some_param",true);
-        }
+        checkMap.put("some_param",someParam == null);
         return checkMap;
     }
 }
