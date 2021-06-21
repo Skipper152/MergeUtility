@@ -28,21 +28,17 @@ public class JSONComparator {
     }
 
     private Difference createNewDiff(AbstractModel firstModel, AbstractModel secondModel,
-                                     String firstPath, String secondPath,
-                                     Operations operation) {
+                                     String path, Operations operation) {
 
         Difference difference = new Difference(firstModel, secondModel);
         difference.addOperation(operation);
-        difference.addPathFirstModel(firstPath);
-        difference.addPathSecondModel(secondPath);
+        difference.addPath(path);
         return difference;
     }
 
-    private void addDataInDiff(Difference difference, Operations operation,
-                               String firstPath, String secondPath) {
+    private void addDataInDiff(Difference difference, Operations operation, String path) {
         difference.addOperation(operation);
-        difference.addPathFirstModel(firstPath);
-        difference.addPathSecondModel(secondPath);
+        difference.addPath(path);
     }
 
     private void compareMetadata(Metadata metadataFirst, Metadata metadataSecond) {
@@ -57,20 +53,14 @@ public class JSONComparator {
         if (appFirst.getName() != null && appSecond.getName() != null) {
             if (!appFirst.getName().equals(appSecond.getName())) {
                 diffLinkedList.addLast(createNewDiff(appFirst, appSecond,
-                                    "metadata/application/name",
-                                "metadata/application/name",
-                                            Operations.REPLACE));
+                                    "metadata/application/name", Operations.REPLACE));
             }
         } else if (appFirst.getName() != null) {
             diffLinkedList.addLast(createNewDiff(appFirst, appSecond,
-                    "metadata/application/name",
-                    "metadata/application/name",
-                    Operations.DELETE));
+                    "metadata/application/name", Operations.DELETE));
         } else if (appSecond.getName() != null) {
             diffLinkedList.addLast(createNewDiff(appFirst, appSecond,
-                    "metadata/application/name",
-                    "metadata/application/name",
-                    Operations.ADD));
+                    "metadata/application/name", Operations.ADD));
         }
     }
 
@@ -78,20 +68,14 @@ public class JSONComparator {
         if (desFirst.getVersion() != null && desSecond.getVersion() != null) {
             if (!desFirst.getVersion().equals(desSecond.getVersion())) {
                 diffLinkedList.addLast(createNewDiff(desFirst, desSecond,
-                        "metadata/description/version",
-                        "metadata/description/version",
-                        Operations.REPLACE));
+                        "metadata/description/version", Operations.REPLACE));
             }
         } else if (desFirst.getVersion() != null) {
             diffLinkedList.addLast(createNewDiff(desFirst, desSecond,
-                    "metadata/description/version",
-                    "metadata/description/version",
-                    Operations.DELETE));
+                    "metadata/description/version", Operations.DELETE));
         } else if (desSecond.getVersion() != null) {
             diffLinkedList.addLast(createNewDiff(desFirst, desSecond,
-                    "metadata/description/version",
-                    "metadata/description/version",
-                    Operations.ADD));
+                    "metadata/description/version", Operations.ADD));
         }
     }
 
