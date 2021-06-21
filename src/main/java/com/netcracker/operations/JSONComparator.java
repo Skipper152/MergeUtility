@@ -10,20 +10,29 @@ public class JSONComparator {
 
     private final LinkedList<Difference> diffLinkedList;
 
-    public JSONComparator(JSONModel jsonModel1, JSONModel jsonModel2) {
+    public JSONComparator(JSONModel jsonModelFirst, JSONModel jsonModelSecond) {
         diffLinkedList = new LinkedList<>();
-        compareJSON(jsonModel1, jsonModel2);
+        compareJSON(jsonModelFirst, jsonModelSecond);
     }
 
-    private void compareJSON(JSONModel jsonModel1, JSONModel jsonModel2) {
+    private void compareJSON(JSONModel jsonModelFirst, JSONModel jsonModelSecond) {
         //comparison metadata field
-        compareMetadata(jsonModel1.getMetadata(), jsonModel2.getMetadata());
+        compareMetadata(jsonModelFirst.getMetadata(), jsonModelSecond.getMetadata());
 
         //comparison services field
-        compareServicesArray(jsonModel1.getServices(), jsonModel2.getServices());
+        compareServicesArray(jsonModelFirst.getServices(), jsonModelSecond.getServices());
 
         //comparison artifacts field
+        //compareArtifactsArray(jsonModelFirst.getArtifacts(), jsonModelSecond.getArtifacts());
 
+        //comparison script field
+        compareScriptArray(jsonModelFirst.getScripts(), jsonModelSecond.getScripts());
+
+        //comparison rpm field
+        compareRPMArray(jsonModelFirst.getRpms(), jsonModelSecond.getRpms());
+
+        //comparison parameters field
+        //compareParameters(jsonModelFirst.getParameters(), jsonModelSecond.getParameters());
 
     }
 
@@ -369,6 +378,12 @@ public class JSONComparator {
             }
         } else if ()
     }*/
+
+    private void compareScriptArray(ArrayList<Script> scriptsFirst, ArrayList<Script> scriptsSecond) {
+
+    }
+
+
 
     public LinkedList<Difference> getDiffsList() {
         return diffLinkedList;
