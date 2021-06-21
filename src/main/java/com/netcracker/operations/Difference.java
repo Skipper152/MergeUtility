@@ -12,7 +12,8 @@ enum Operations{
 
 public class Difference {
     private final LinkedList<Operations> operations;
-    private final LinkedList<String> paths;
+    private final LinkedList<String> pathsFirstModel;
+    private final LinkedList<String> pathsSecondModel;
     private final AbstractModel firstModel;
     private final AbstractModel secondModel;
 
@@ -20,7 +21,8 @@ public class Difference {
         this.firstModel = firstModel;
         this.secondModel = secondModel;
         operations = new LinkedList<>();
-        paths = new LinkedList<>();
+        pathsFirstModel = new LinkedList<>();
+        pathsSecondModel = new LinkedList<>();
     }
 
     public AbstractModel getFirstModel() {
@@ -35,23 +37,36 @@ public class Difference {
         operations.addLast(operation);
     }
 
-    public void addPath(String path) {
-        paths.addLast(path);
+    public void addPathFirstModel(String path) {
+        pathsFirstModel.addLast(path);
+    }
+
+    public void addPathSecondModel(String path) {
+        pathsSecondModel.addLast(path);
     }
 
     public LinkedList<Operations> getOperations() {
         return operations;
     }
 
-    public LinkedList<String> getPaths() {
-        return paths;
+    public LinkedList<String> getPathsFirstModel() {
+        return pathsFirstModel;
+    }
+
+    public LinkedList<String> getPathsSecondModel() {
+        return pathsSecondModel;
+    }
+
+    public Boolean checkDifference() {
+        return !operations.isEmpty();
     }
 
     @Override
     public String toString() {
         return "Difference{" +
                 "operations=" + operations +
-                ", paths=" + paths +
+                ", pathsFirstModel=" + pathsFirstModel +
+                ", pathsSecondModel=" + pathsSecondModel +
                 ", firstModel=" + firstModel +
                 ", secondModel=" + secondModel +
                 '}';
