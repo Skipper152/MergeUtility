@@ -34,7 +34,7 @@ public class Service extends AbstractModel {
 
     // boolean, optional
     @JsonProperty("force")
-    private boolean force;
+    private Boolean force;
 
     // string, optional
     @JsonProperty("github_repository")
@@ -123,7 +123,7 @@ public class Service extends AbstractModel {
         this.dockerTag = dockerTag;
     }
 
-    public boolean isForce() {
+    public Boolean getForce() {
         return force;
     }
 

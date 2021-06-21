@@ -10,21 +10,21 @@ import java.util.HashMap;
 public class Description extends AbstractModel {
     // integer, mandatory
     @JsonProperty("version")
-    private int version;
+    private Integer version;
 
     public Description() {
 
     }
 
-    public Description(int version) {
+    public Description(Integer version) {
         this.version = version;
     }
 
-    public int getVersion() {
+    public Integer getVersion() {
         return version;
     }
 
-    public void setVersion(int version) {
+    public void setVersion(Integer version) {
         this.version = version;
     }
 
@@ -38,7 +38,7 @@ public class Description extends AbstractModel {
     @Override
     public HashMap<String,Boolean> validate() {
         HashMap<String,Boolean> checkMap = new HashMap<>();
-        checkMap.put("version", version == 0);
+        checkMap.put("version", version == null);
         return checkMap;
     }
 }
