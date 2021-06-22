@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.HashMap;
-import java.util.LinkedList;
 
 // object, optional
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -93,6 +92,25 @@ public class Script extends AbstractModel {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    @Override
+    public boolean equals(Object model) {
+
+        if (this == model)
+            return true;
+
+        if (model == null)
+            return false;
+
+        if (this.getClass() != model.getClass())
+            return false;
+
+        Script script = (Script) model;
+
+        return scriptName.equals(script.getScriptName()) &&
+                hashes.equals(script.getHashes()) &&
+                url.equals(script.getUrl());
     }
 
     @Override

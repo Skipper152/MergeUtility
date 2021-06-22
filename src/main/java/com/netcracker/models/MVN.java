@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.HashMap;
-import java.util.LinkedList;
 
 // object, mandatory
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -120,6 +119,27 @@ public class MVN extends AbstractModel {
 
     public void setHashes(Hashes hashes) {
         this.hashes = hashes;
+    }
+
+    @Override
+    public boolean equals(Object model) {
+        if (this == model)
+            return true;
+
+        if (model == null)
+            return false;
+
+        if (this.getClass() != model.getClass())
+            return false;
+
+        MVN mvn = (MVN) model;
+
+        return groupId.equals(mvn.getGroupId()) &&
+                artifactId.equals(mvn.getArtifactId()) &&
+                version.equals(mvn.getVersion()) &&
+                mvnType.equals(mvn.getMvnType()) &&
+                mvnRepository.equals(mvn.getMvnRepository()) &&
+                hashes.equals(mvn.getHashes());
     }
 
     @Override

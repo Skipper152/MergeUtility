@@ -9,7 +9,7 @@ import java.util.HashMap;
 // object, optional
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Artifact extends AbstractModel {
-    // array, mandatory // вопрос! что тут за струткура данных?!
+    // array, mandatory
     @JsonProperty("mvn")
     private ArrayList<MVN> mvns;
 
@@ -92,6 +92,43 @@ public class Artifact extends AbstractModel {
 
     public void setFiles(ArrayList<File> files) {
         this.files = files;
+    }
+
+    public Boolean isMVN() {
+        HashMap<String,Boolean> validateMap = validate();
+        return !(validateMap.get("service-short-name") || validateMap.get("service_name") ||
+                validateMap.get("hashes") || validateMap.get("file")) &&
+                validateMap.get("mvn");
+    }
+
+    public Boolean isOther() {
+        HashMap<String,Boolean> validateMap = validate();
+        return (validateMap.get("service-short-name") || validateMap.get("service_name") ||
+                validateMap.get("hashes") || validateMap.get("file")) &&
+                !validateMap.get("mvn");
+    }
+
+    @Override
+    public boolean equals(Object model) {
+        if (this == model)
+            return true;
+
+        if (model == null)
+            return false;
+
+        if (this.getClass() != model.getClass())
+            return false;
+
+        Artifact artifact = (Artifact) model;
+
+        if (this.isMVN() && artifact.isMVN()) {
+            return mvns.equals(artifact.getMvns());
+        } else if (this.isOther() && artifact.isOther()) {
+            return hashes.equals(artifact.getHashes()) &&
+                    files.get(0).equals(artifact.getFiles().get(0)) &&
+                    targetRepository.equals(artifact.getTargetRepository());
+        }
+        return false;
     }
 
     @Override

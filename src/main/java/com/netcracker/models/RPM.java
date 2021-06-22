@@ -68,6 +68,24 @@ public class RPM extends AbstractModel {
     }
 
     @Override
+    public boolean equals(Object model) {
+
+        if (this == model)
+            return true;
+
+        if (model == null)
+            return false;
+
+        if (this.getClass() != model.getClass())
+            return false;
+
+        RPM rpm = (RPM) model;
+        return url.equals(rpm.getUrl()) &&
+                rpmRepositoryName.equals(rpm.getRpmRepositoryName()) &&
+                hashes.equals(rpm.getHashes());
+    }
+
+    @Override
     public String toString() {
         return "{" +
                 "\"url\": " + "\"" + url + "\"" +

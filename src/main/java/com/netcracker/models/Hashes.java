@@ -50,6 +50,24 @@ public class Hashes extends AbstractModel {
     }
 
     @Override
+    public boolean equals(Object model) {
+
+        if (this == model)
+            return true;
+
+        if (model == null)
+            return false;
+
+        if (this.getClass() != model.getClass())
+            return false;
+
+        Hashes hashes = (Hashes) model;
+
+        return sha1.equals(hashes.getSha1()) &&
+                sha256.equals(hashes.getSha256());
+    }
+
+    @Override
     public HashMap<String,Boolean> validate() {
         HashMap<String,Boolean> checkMap = new HashMap<>();
         checkMap.put("sha1", sha1 == null);

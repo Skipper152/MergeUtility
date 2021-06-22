@@ -29,7 +29,7 @@ public class JSONComparator {
         compareScriptArray(jsonModelFirst.getScripts(), jsonModelSecond.getScripts());
 
         //comparison rpm field
-        compareRPMArray(jsonModelFirst.getRpms(), jsonModelSecond.getRpms());
+        compareRPMsArray(jsonModelFirst.getRpms(), jsonModelSecond.getRpms());
 
         //comparison parameters field
         //compareParameters(jsonModelFirst.getParameters(), jsonModelSecond.getParameters());
@@ -94,7 +94,7 @@ public class JSONComparator {
         for (int i = 0; i < servicesFirst.size(); ++i) {
             boolean flag = true;
             for (int j = 0; j < servicesSecond.size(); ++j) {
-                if (checkForMatchServices(servicesFirst.get(i), servicesSecond.get(j))) {
+                if (servicesFirst.get(i).equals(servicesSecond.get(j))) {
                     compareService(servicesFirst.get(i), servicesSecond.get(j), i, j);
                     flag = false;
                     break;
@@ -108,7 +108,7 @@ public class JSONComparator {
         for (int i = 0; i < servicesSecond.size(); ++i) {
             boolean flag = true;
             for (int j = 0; j < servicesFirst.size(); ++j) {
-                if (checkForMatchServices(servicesFirst.get(i), servicesSecond.get(j))) {
+                if (servicesFirst.get(j).equals(servicesSecond.get(i))) {
                     flag = false;
                     break;
                 }
@@ -117,16 +117,6 @@ public class JSONComparator {
                 compareServiceFirstNull(servicesSecond.get(i), i);
             }
         }
-    }
-
-    private Boolean checkForMatchServices(Service serviceBegin, Service serviceEnd) {
-        return serviceBegin.getServiceName().equals(serviceEnd.getServiceName()) &&
-                serviceBegin.getArtifactType().equals(serviceEnd.getArtifactType()) &&
-                serviceBegin.getDockerRegistry().equals(serviceEnd.getDockerRegistry()) &&
-                serviceBegin.getDockerImageName().equals(serviceEnd.getDockerImageName()) &&
-                serviceBegin.getDockerTag().equals(serviceEnd.getDockerTag()) &&
-                serviceBegin.getHashes().getSha1().equals(serviceEnd.getHashes().getSha1()) &&
-                serviceBegin.getHashes().getSha256().equals(serviceEnd.getHashes().getSha256());
     }
 
     private void compareServiceSecondNull(Service service, int objNumber) {
@@ -308,82 +298,339 @@ public class JSONComparator {
         }
     }
 
-    /*private void compareArtifactsArray(ArrayList<Artifact> artifacts1, ArrayList<Artifact> artifacts2) {
-        if (artifacts1.size() == artifacts2.size()) {
-            for (int i = 0; i < artifacts1.size(); ++i) {
-                compareArtifact(artifacts1.get(i),artifacts2.get(i),i);
+    private void compareArtifactsArray(ArrayList<Artifact> artifactsFirst, ArrayList<Artifact> artifactsSecond) {
+
+        for (int i = 0; i < artifactsFirst.size(); ++i) {
+            boolean flag = true;
+            for (int j = 0; j < artifactsSecond.size(); ++j) {
+                if (artifactsFirst.get(i).equals(artifactsSecond.get(j))) {
+                    compareArtifact(artifactsFirst.get(i), artifactsSecond.get(j), i, j);
+                    flag = false;
+                    break;
+                }
+            }
+            if (flag) {
+                compareArtifactSecondNull(artifactsFirst.get(i), i);
+            }
+        }
+
+        for (int i = 0; i < artifactsSecond.size(); ++i) {
+            boolean flag = true;
+            for (int j = 0; j < artifactsFirst.size(); ++j) {
+                if (artifactsFirst.get(j).equals(artifactsSecond.get(i))) {
+                    flag = false;
+                    break;
+                }
+            }
+            if (flag) {
+                compareArtifactFirstNull(artifactsSecond.get(i), i);
             }
         }
     }
 
-    private void compareArtifact(Artifact artifact1, Artifact artifact2, int objNumber) {
-        HashMap<String, Boolean> validateMap1 = artifact1.validate();
-        HashMap<String, Boolean> validateMap2 = artifact2.validate();
-
-        if ((validateMap1.get("service-short-name") || validateMap1.get("service_name") ||
-                validateMap1.get("hashes") || validateMap1.get("file")) &&
-            (validateMap2.get("service-short-name") || validateMap2.get("service_name") ||
-                validateMap2.get("hashes") || validateMap2.get("file")) &&
-                !validateMap1.get("mvn") && !validateMap2.get("mvn")) {
-
-            if (artifact1.getServiceShortName() != null && artifact2.getServiceShortName() != null) {
-                if (artifact1.getServiceShortName().equals(artifact2.getServiceShortName())) {
-                    diffLinkedList.addLast(new Difference(Operations.REPLACE, "artifacts" + objNumber + "/service-short-name"));
-                }
-            } else if (artifact1.getServiceShortName() != null) {
-                diffLinkedList.addLast(new Difference(Operations.DELETE, "artifacts" + objNumber + "/service-short-name"));
-            } else if (artifact2.getServiceShortName() != null) {
-                diffLinkedList.addLast(new Difference(Operations.ADD, "artifacts" + objNumber + "/service-short-name"));
-            }
-
-            if (artifact1.getServiceName() != null && artifact2.getServiceName() != null) {
-                if (artifact1.getServiceName().equals(artifact2.getServiceName())) {
-                    diffLinkedList.addLast(new Difference(Operations.REPLACE, "artifacts" + objNumber + "/service_name"));
-                }
-            } else if (artifact1.getServiceName() != null) {
-                diffLinkedList.addLast(new Difference(Operations.DELETE, "artifacts" + objNumber + "/service_name"));
-            } else if (artifact2.getServiceName() != null) {
-                diffLinkedList.addLast(new Difference(Operations.ADD, "artifacts" + objNumber + "/service_name"));
-            }
-
-            //comparison hashes field
-            if (artifact1.getHashes().getSha1() != null && artifact2.getHashes().getSha1() != null) {
-                if (!artifact1.getHashes().getSha1().equals(artifact2.getHashes().getSha1())) {
-                    diffLinkedList.addLast(new Difference(Operations.REPLACE, "artifacts/" + objNumber + "/hashes/sha1"));
-                }
-            } else if (artifact1.getHashes().getSha1() != null) {
-                diffLinkedList.addLast(new Difference(Operations.DELETE, "artifacts/" + objNumber + "/hashes/sha1"));
-            } else if (artifact2.getHashes().getSha1() != null) {
-                diffLinkedList.addLast(new Difference(Operations.ADD, "artifacts/" + objNumber + "/hashes/sha1"));
-            }
-            if (artifact1.getHashes().getSha256() != null && artifact2.getHashes().getSha256() != null) {
-                if (!artifact1.getHashes().getSha256().equals(artifact2.getHashes().getSha256())) {
-                    diffLinkedList.addLast(new Difference(Operations.REPLACE, "artifacts/" + objNumber + "/hashes/sha256"));
-                }
-            } else if (artifact1.getHashes().getSha256() != null) {
-                diffLinkedList.addLast(new Difference(Operations.DELETE, "artifacts/" + objNumber + "/hashes/sha256"));
-            } else if (artifact2.getHashes().getSha256() != null) {
-                diffLinkedList.addLast(new Difference(Operations.ADD, "artifacts/" + objNumber + "/hashes/sha256"));
-            }
-
-            //comparison file field
-            if (artifact1.getFiles().get(0) != null && artifact2.getFiles().get(0) != null) {
-                if (artifact1.getFiles().get(0).equals(artifact2.getFiles().get(0))) {
-                    diffLinkedList.addLast(new Difference(Operations.REPLACE, "artifacts" + objNumber + "/file/0"));
-                }
-            } else if (artifact1.getFiles().get(0) != null) {
-                diffLinkedList.addLast(new Difference(Operations.DELETE, "artifacts" + objNumber + "/file/0"));
-            } else if (artifact2.getFiles().get(0) != null) {
-                diffLinkedList.addLast(new Difference(Operations.ADD, "artifacts" + objNumber + "/file/0"));
-            }
-        } else if ()
-    }*/
-
-    private void compareScriptArray(ArrayList<Script> scriptsFirst, ArrayList<Script> scriptsSecond) {
+    private void compareArtifactSecondNull(Artifact artifact, int objNumber) {
 
     }
 
+    private void compareArtifactFirstNull(Artifact artifact, int objNumber) {
 
+    }
+
+    private void compareArtifact(Artifact artifactFirst, Artifact artifactSecond,
+                                            int firstObjNumber, int secondObjNumber) {
+
+        Difference serviceDifference = new Difference(artifactFirst,artifactSecond);
+
+        if (artifactFirst.isOther() && artifactSecond.isOther()) {
+            if (artifactFirst.getServiceShortName() != null && artifactSecond.getServiceShortName() != null) {
+                if (artifactFirst.getServiceShortName().equals(artifactSecond.getServiceShortName())) {
+                    addDataInDiff(serviceDifference,Operations.REPLACE,
+                            "artifacts/" + firstObjNumber + "/service-short-name",
+                            "artifacts/" + secondObjNumber + "/service-short-name");
+                }
+            } else if (artifactFirst.getServiceShortName() != null) {
+                addDataInDiff(serviceDifference,Operations.DELETE,
+                        "artifacts/" + firstObjNumber + "/service-short-name",
+                        "artifacts/" + secondObjNumber + "/service-short-name");
+            } else if (artifactSecond.getServiceShortName() != null) {
+                addDataInDiff(serviceDifference,Operations.ADD,
+                        "artifacts/" + firstObjNumber + "/service-short-name",
+                        "artifacts/" + secondObjNumber + "/service-short-name");
+            }
+
+            if (artifactFirst.getServiceName() != null && artifactSecond.getServiceName() != null) {
+                if (artifactFirst.getServiceName().equals(artifactSecond.getServiceName())) {
+                    addDataInDiff(serviceDifference,Operations.REPLACE,
+                            "artifacts/" + firstObjNumber + "/service_name",
+                            "artifacts/" + secondObjNumber + "/service_name");
+                }
+            } else if (artifactFirst.getServiceName() != null) {
+                addDataInDiff(serviceDifference,Operations.DELETE,
+                        "artifacts/" + firstObjNumber + "/service_name",
+                        "artifacts/" + secondObjNumber + "/service_name");
+            } else if (artifactSecond.getServiceName() != null) {
+                addDataInDiff(serviceDifference,Operations.ADD,
+                        "artifacts/" + firstObjNumber + "/service_name",
+                        "artifacts/" + secondObjNumber + "/service_name");
+            }
+        } else if (artifactFirst.isMVN() && artifactSecond.isMVN()) {
+            if (artifactFirst.getServiceName() != null && artifactSecond.getServiceName() != null) {
+                if (artifactFirst.getServiceName().equals(artifactSecond.getServiceName())) {
+                    addDataInDiff(serviceDifference,Operations.REPLACE,
+                            "artifacts/" + firstObjNumber + "/service_name",
+                            "artifacts/" + secondObjNumber + "/service_name");
+                }
+            } else if (artifactFirst.getServiceName() != null) {
+                addDataInDiff(serviceDifference,Operations.DELETE,
+                        "artifacts/" + firstObjNumber + "/service_name",
+                        "artifacts/" + secondObjNumber + "/service_name");
+            } else if (artifactSecond.getServiceName() != null) {
+                addDataInDiff(serviceDifference,Operations.ADD,
+                        "artifacts/" + firstObjNumber + "/service_name",
+                        "artifacts/" + secondObjNumber + "/service_name");
+            }
+        }
+    }
+
+    private void compareScriptArray(ArrayList<Script> scriptsFirst, ArrayList<Script> scriptsSecond) {
+        for (int i = 0; i < scriptsFirst.size(); ++i) {
+            boolean flag = true;
+            for (int j = 0; j < scriptsSecond.size(); ++j) {
+                if (scriptsFirst.get(i).equals(scriptsSecond.get(j))) {
+                    compareScript(scriptsFirst.get(i), scriptsSecond.get(j), i, j);
+                    flag = false;
+                    break;
+                }
+            }
+            if (flag) {
+                compareScriptSecondNull(scriptsFirst.get(i), i);
+            }
+        }
+
+        for (int i = 0; i < scriptsSecond.size(); ++i) {
+            boolean flag = true;
+            for (int j = 0; j < scriptsFirst.size(); ++j) {
+                if (scriptsFirst.get(j).equals(scriptsSecond.get(i))) {
+                    flag = false;
+                    break;
+                }
+            }
+            if (flag) {
+                compareScriptFirstNull(scriptsSecond.get(i), i);
+            }
+        }
+    }
+
+    private void compareScriptSecondNull(Script script, int objNumber) {
+
+        Difference diffNull = new Difference(script, null);
+
+        // mandatory fields
+        diffNull.addOperation(Operations.DELETE);
+        diffNull.addPathFirstModel("script/" + objNumber + "/script_name");
+        diffNull.addOperation(Operations.DELETE);
+        diffNull.addPathFirstModel("script/" + objNumber + "/hashes");
+        diffNull.addOperation(Operations.DELETE);
+        diffNull.addPathFirstModel("script/" + objNumber + "/url");
+
+        // optional fields
+        if (script.getServiceShortName() != null) {
+            diffNull.addOperation(Operations.DELETE);
+            diffNull.addPathFirstModel("script/" + objNumber + "/service-short-name");
+        }
+        if (script.getStartPoint() != null) {
+            diffNull.addOperation(Operations.DELETE);
+            diffNull.addPathFirstModel("script/" + objNumber + "/start-point");
+        }
+        if (script.getEndPoint() != null) {
+            diffNull.addOperation(Operations.DELETE);
+            diffNull.addPathFirstModel("script/" + objNumber + "/end-point");
+        }
+
+        diffLinkedList.addLast(diffNull);
+    }
+
+    private void compareScriptFirstNull(Script script, int objNumber) {
+
+        Difference diffNull = new Difference(null, script);
+
+        // mandatory fields
+        diffNull.addOperation(Operations.ADD);
+        diffNull.addPathSecondModel("script/" + objNumber + "/script_name");
+        diffNull.addOperation(Operations.ADD);
+        diffNull.addPathSecondModel("script/" + objNumber + "/hashes");
+        diffNull.addOperation(Operations.ADD);
+        diffNull.addPathSecondModel("script/" + objNumber + "/url");
+
+        // optional fields
+        if (script.getServiceShortName() != null) {
+            diffNull.addOperation(Operations.ADD);
+            diffNull.addPathSecondModel("script/" + objNumber + "/service-short-name");
+        }
+        if (script.getStartPoint() != null) {
+            diffNull.addOperation(Operations.ADD);
+            diffNull.addPathSecondModel("script/" + objNumber + "/start-point");
+        }
+        if (script.getEndPoint() != null) {
+            diffNull.addOperation(Operations.ADD);
+            diffNull.addPathSecondModel("script/" + objNumber + "/end-point");
+        }
+
+        diffLinkedList.addLast(diffNull);
+    }
+
+    private void compareScript(Script scriptFirst, Script scriptSecond, int firstObjNumber, int secondObjNumber) {
+        Difference scriptDifference = new Difference(scriptFirst,scriptSecond);
+
+        //comparison service-short-name field
+        if (scriptFirst.getServiceShortName() != null && scriptSecond.getServiceShortName() != null) {
+            if (!scriptFirst.getServiceShortName().equals(scriptSecond.getServiceShortName())) {
+                addDataInDiff(scriptDifference,Operations.REPLACE,
+                        "script/" + firstObjNumber + "/service-short-name",
+                        "script/" + secondObjNumber + "/service-short-name");
+            }
+        } else if (scriptFirst.getServiceShortName() != null) {
+            addDataInDiff(scriptDifference,Operations.DELETE,
+                    "script/" + firstObjNumber + "/service-short-name",
+                    "script/" + secondObjNumber + "/service-short-name");
+        } else if (scriptSecond.getServiceShortName() != null) {
+            addDataInDiff(scriptDifference,Operations.ADD,
+                    "script/" + firstObjNumber + "/service-short-name",
+                    "script/" + secondObjNumber + "/service-short-name");
+        }
+
+        //comparison start-point field
+        if (scriptFirst.getStartPoint() != null && scriptSecond.getStartPoint() != null) {
+            if (!scriptFirst.getStartPoint().equals(scriptSecond.getStartPoint())) {
+                addDataInDiff(scriptDifference,Operations.REPLACE,
+                        "script/" + firstObjNumber + "/start-point",
+                        "script/" + secondObjNumber + "/start-point");
+            }
+        } else if (scriptFirst.getStartPoint() != null) {
+            addDataInDiff(scriptDifference,Operations.DELETE,
+                    "script/" + firstObjNumber + "/start-point",
+                    "script/" + secondObjNumber + "/start-point");
+        } else if (scriptSecond.getStartPoint() != null) {
+            addDataInDiff(scriptDifference,Operations.ADD,
+                    "script/" + firstObjNumber + "/start-point",
+                    "script/" + secondObjNumber + "/start-point");
+        }
+
+        //comparison end-point field
+        if (scriptFirst.getEndPoint() != null && scriptSecond.getEndPoint() != null) {
+            if (!scriptFirst.getEndPoint().equals(scriptSecond.getEndPoint())) {
+                addDataInDiff(scriptDifference,Operations.REPLACE,
+                        "script/" + firstObjNumber + "/end-point",
+                        "script/" + secondObjNumber + "/end-point");
+            }
+        } else if (scriptFirst.getEndPoint() != null) {
+            addDataInDiff(scriptDifference,Operations.DELETE,
+                    "script/" + firstObjNumber + "/end-point",
+                    "script/" + secondObjNumber + "/end-point");
+        } else if (scriptSecond.getEndPoint() != null) {
+            addDataInDiff(scriptDifference,Operations.ADD,
+                    "script/" + firstObjNumber + "/end-point",
+                    "script/" + secondObjNumber + "/end-point");
+        }
+
+        if (scriptDifference.checkDifference()) {
+            diffLinkedList.addLast(scriptDifference);
+        }
+    }
+
+    private void compareRPMsArray(ArrayList<RPM> rpmsFirst, ArrayList<RPM> rpmsSecond) {
+        for (int i = 0; i < rpmsFirst.size(); ++i) {
+            boolean flag = true;
+            for (int j = 0; j < rpmsSecond.size(); ++j) {
+                if (rpmsFirst.get(i).equals(rpmsSecond.get(j))) {
+                    compareRPM(rpmsFirst.get(i), rpmsSecond.get(j), i, j);
+                    flag = false;
+                    break;
+                }
+            }
+            if (flag) {
+                compareRPMSecondNull(rpmsFirst.get(i), i);
+            }
+        }
+
+        for (int i = 0; i < rpmsSecond.size(); ++i) {
+            boolean flag = true;
+            for (int j = 0; j < rpmsFirst.size(); ++j) {
+                if (rpmsFirst.get(j).equals(rpmsSecond.get(i))) {
+                    flag = false;
+                    break;
+                }
+            }
+            if (flag) {
+                compareRPMFirstNull(rpmsSecond.get(i), i);
+            }
+        }
+    }
+
+    private void compareRPMSecondNull(RPM rpm, int objNumber) {
+
+        Difference diffNull = new Difference(rpm, null);
+
+        // mandatory fields
+        diffNull.addOperation(Operations.DELETE);
+        diffNull.addPathFirstModel("rpm/" + objNumber + "/rpm_repository_name");
+        diffNull.addOperation(Operations.DELETE);
+        diffNull.addPathFirstModel("rpm/" + objNumber + "/hashes");
+        diffNull.addOperation(Operations.DELETE);
+        diffNull.addPathFirstModel("rpm/" + objNumber + "/url");
+
+        // optional fields
+        if (rpm.getServiceShortName() != null) {
+            diffNull.addOperation(Operations.DELETE);
+            diffNull.addPathFirstModel("rpm/" + objNumber + "/service-short-name");
+        }
+
+        diffLinkedList.addLast(diffNull);
+    }
+
+    private void compareRPMFirstNull(RPM rpm, int objNumber) {
+
+        Difference diffNull = new Difference(null, rpm);
+
+        // mandatory fields
+        diffNull.addOperation(Operations.ADD);
+        diffNull.addPathSecondModel("rpm/" + objNumber + "/rpm_repository_name");
+        diffNull.addOperation(Operations.ADD);
+        diffNull.addPathSecondModel("rpm/" + objNumber + "/hashes");
+        diffNull.addOperation(Operations.ADD);
+        diffNull.addPathSecondModel("rpm/" + objNumber + "/url");
+
+        // optional fields
+        if (rpm.getServiceShortName() != null) {
+            diffNull.addOperation(Operations.ADD);
+            diffNull.addPathSecondModel("rpm/" + objNumber + "/service-short-name");
+        }
+
+        diffLinkedList.addLast(diffNull);
+    }
+
+    private void compareRPM(RPM rpmFirst, RPM rpmSecond, int firstObjNumber, int secondObjNumber) {
+        Difference rpmDifference = new Difference(rpmFirst, rpmSecond);
+
+        //comparison service-short-name field
+        if (rpmFirst.getServiceShortName() != null && rpmSecond.getServiceShortName() != null) {
+            if (!rpmFirst.getServiceShortName().equals(rpmSecond.getServiceShortName())) {
+                addDataInDiff(rpmDifference, Operations.REPLACE,
+                        "rpm/" + firstObjNumber + "/service-short-name",
+                        "rpm/" + secondObjNumber + "/service-short-name");
+            }
+        } else if (rpmFirst.getServiceShortName() != null) {
+            addDataInDiff(rpmDifference, Operations.DELETE,
+                    "rpm/" + firstObjNumber + "/service-short-name",
+                    "rpm/" + secondObjNumber + "/service-short-name");
+        } else if (rpmSecond.getServiceShortName() != null) {
+            addDataInDiff(rpmDifference, Operations.ADD,
+                    "rpm/" + firstObjNumber + "/service-short-name",
+                    "rpm/" + secondObjNumber + "/service-short-name");
+        }
+
+        diffLinkedList.addLast(rpmDifference);
+    }
 
     public LinkedList<Difference> getDiffsList() {
         return diffLinkedList;

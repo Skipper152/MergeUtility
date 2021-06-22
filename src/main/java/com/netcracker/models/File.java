@@ -34,6 +34,22 @@ public class File extends AbstractModel {
     }
 
     @Override
+    public boolean equals(Object model) {
+        if (this == model)
+            return true;
+
+        if (model == null)
+            return false;
+
+        if (this.getClass() != model.getClass())
+            return false;
+
+        File file = (File) model;
+
+        return this.file.equals(file.getFile());
+    }
+
+    @Override
     public HashMap<String,Boolean> validate() {
         HashMap<String,Boolean> checkMap = new HashMap<>();
         checkMap.put("file", file == null);

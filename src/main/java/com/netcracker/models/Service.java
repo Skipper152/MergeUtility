@@ -164,6 +164,28 @@ public class Service extends AbstractModel {
     }
 
     @Override
+    public boolean equals(Object model) {
+
+        if (this == model)
+            return true;
+
+        if (model == null)
+            return false;
+
+        if (this.getClass() != model.getClass())
+            return false;
+
+        Service service = (Service) model;
+
+        return serviceName.equals(service.getServiceName()) &&
+                artifactType.equals(service.getArtifactType()) &&
+                dockerRegistry.equals(service.getDockerRegistry()) &&
+                dockerImageName.equals(service.getDockerImageName()) &&
+                dockerTag.equals(service.getDockerTag()) &&
+                hashes.equals(service.getHashes());
+    }
+
+    @Override
     public String toString() {
         return "{" +
                 "\"serviceShortName\": " + "\"" + serviceShortName + "\"" +
