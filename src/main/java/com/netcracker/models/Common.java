@@ -53,6 +53,23 @@ public class Common extends AbstractModel {
     }
 
     @Override
+    public boolean equals(Object model) {
+
+        if (this == model)
+            return true;
+
+        if (model == null)
+            return false;
+
+        if (this.getClass() != model.getClass())
+            return false;
+
+        Common common = (Common) model;
+
+        return someParam.equals(common.getSomeParam());
+    }
+
+    @Override
     public String toString() {
         return "{" +
                 "\"someParam:\" " + "\"" + someParam + "\"" +

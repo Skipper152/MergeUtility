@@ -42,11 +42,6 @@ public class Validator {
                 }
             }
         }
-
-        for (String str : linkedListErrors) {
-            System.out.println(str);
-        }
-
     }
 
     private void validationMetadataModel(Metadata metadata) {
@@ -234,5 +229,13 @@ public class Validator {
         if (jsonValidateMap.get("service_name")) {
             linkedListErrors.addLast("The field \"service_name\" in the \"services\"-parameter is null.");
         }
+
+        if (!jsonValidateMap.get("service_name") && jsonValidateMap.get("some-third-param")) {
+            linkedListErrors.addLast("The field \"some-third-param\" in the service_name-parameter of the parameters field is null.");
+        }
+    }
+
+    public LinkedList<String> getLinkedListErrors() {
+        return linkedListErrors;
     }
 }

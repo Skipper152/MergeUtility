@@ -53,6 +53,26 @@ public class ServiceName extends AbstractModel {
     }
 
     @Override
+    public boolean equals(Object model) {
+
+        if (this == model)
+            return true;
+
+        if (model == null)
+            return false;
+
+        if (this.getClass() != model.getClass())
+            return false;
+
+        ServiceName serviceName = (ServiceName) model;
+
+        String someThirdParamFirst = this.serviceName.get("service_name");
+        String someThirdParamSecond = serviceName.getServiceName().get("service_name");
+
+        return this.serviceName.equals(serviceName.getSomeParam());
+    }
+
+    @Override
     public String toString() {
         return "{" +
                 "\"service_name\": " + serviceName +
@@ -65,6 +85,9 @@ public class ServiceName extends AbstractModel {
     public HashMap<String,Boolean> validate() {
         HashMap<String,Boolean> checkMap = new HashMap<>();
         checkMap.put("service_name", serviceName == null);
+        if (serviceName != null) {
+            checkMap.put("some-third-param", !serviceName.containsKey("some-third-param"));
+        }
         return checkMap;
     }
 }

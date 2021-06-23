@@ -23,7 +23,7 @@ public class JSONComparator {
         compareServicesArray(jsonModelFirst.getServices(), jsonModelSecond.getServices());
 
         //comparison artifacts field
-        //compareArtifactsArray(jsonModelFirst.getArtifacts(), jsonModelSecond.getArtifacts());
+        compareArtifactsArray(jsonModelFirst.getArtifacts(), jsonModelSecond.getArtifacts());
 
         //comparison script field
         compareScriptArray(jsonModelFirst.getScripts(), jsonModelSecond.getScripts());
@@ -32,7 +32,7 @@ public class JSONComparator {
         compareRPMsArray(jsonModelFirst.getRpms(), jsonModelSecond.getRpms());
 
         //comparison parameters field
-        //compareParameters(jsonModelFirst.getParameters(), jsonModelSecond.getParameters());
+        compareParameters(jsonModelFirst.getParameters(), jsonModelSecond.getParameters());
 
     }
 
@@ -299,96 +299,288 @@ public class JSONComparator {
     }
 
     private void compareArtifactsArray(ArrayList<Artifact> artifactsFirst, ArrayList<Artifact> artifactsSecond) {
-
         for (int i = 0; i < artifactsFirst.size(); ++i) {
             boolean flag = true;
             for (int j = 0; j < artifactsSecond.size(); ++j) {
-                if (artifactsFirst.get(i).equals(artifactsSecond.get(j))) {
+                if (artifactsFirst.get(i).isOther() && artifactsSecond.get(j).isOther() &&
+                        artifactsFirst.get(i).equals(artifactsSecond.get(j))) {
+
                     compareArtifact(artifactsFirst.get(i), artifactsSecond.get(j), i, j);
+                    flag = false;
+                    break;
+                } else if (artifactsFirst.get(i).isMVN() && artifactsSecond.get(j).isMVN() &&
+                        artifactsFirst.get(i).getTargetRepository().equals(artifactsSecond.get(j).getTargetRepository())) {
+                    compareMVNsArray(artifactsFirst.get(i).getMvns(), artifactsSecond.get(j).getMvns(), i, j);
                     flag = false;
                     break;
                 }
             }
             if (flag) {
-                compareArtifactSecondNull(artifactsFirst.get(i), i);
+                if (artifactsFirst.get(i).isOther()) {
+                    compareArtifactSecondNull(artifactsFirst.get(i), i);
+                } else {
+                    for (int j = 0; j < artifactsFirst.get(i).getMvns().size(); ++j) {
+                        compareMVNSecondNull(artifactsFirst.get(i).getMvns().get(j), i, j);
+                    }
+                    Difference diffNull = new Difference(artifactsFirst.get(i), null);
+                    diffNull.addOperation(Operations.DELETE);
+                    diffNull.addPathFirstModel("artifacts/" + i + "/target_repository");
+                    diffLinkedList.addLast(diffNull);
+                }
             }
         }
 
         for (int i = 0; i < artifactsSecond.size(); ++i) {
             boolean flag = true;
             for (int j = 0; j < artifactsFirst.size(); ++j) {
-                if (artifactsFirst.get(j).equals(artifactsSecond.get(i))) {
+                if (artifactsFirst.get(j).isOther() && artifactsSecond.get(i).isOther() &&
+                        artifactsFirst.get(j).equals(artifactsSecond.get(i))) {
+
+                    flag = false;
+                    break;
+                } else if (artifactsFirst.get(i).isMVN() && artifactsSecond.get(j).isMVN() &&
+                                artifactsFirst.get(i).getTargetRepository().equals(artifactsSecond.get(j).getTargetRepository())) {
                     flag = false;
                     break;
                 }
             }
             if (flag) {
-                compareArtifactFirstNull(artifactsSecond.get(i), i);
+                if (artifactsSecond.get(i).isOther()) {
+                    compareArtifactFirstNull(artifactsSecond.get(i), i);
+                } else {
+                    for (int j = 0; j < artifactsSecond.get(i).getMvns().size(); ++j) {
+                        compareMVNFirstNull(artifactsSecond.get(i).getMvns().get(j), i, j);
+                    }
+                    Difference diffNull = new Difference(null, artifactsSecond.get(i));
+                    diffNull.addOperation(Operations.ADD);
+                    diffNull.addPathSecondModel("artifacts/" + i + "/target_repository");
+                    diffLinkedList.addLast(diffNull);
+                }
             }
         }
     }
 
-    private void compareArtifactSecondNull(Artifact artifact, int objNumber) {
+    private void compareMVNsArray(ArrayList<MVN> mvnsFirst, ArrayList<MVN> mvnsSecond, int firstObjNumber, int secondObjNumber) {
+        for (int i = 0; i < mvnsFirst.size(); ++i) {
+            boolean flag = true;
+            for (int j = 0; j < mvnsSecond.size(); ++j) {
+                if (mvnsFirst.get(i).equals(mvnsSecond.get(j))) {
+                    compareMVN(mvnsFirst.get(i), mvnsSecond.get(j), i, j, firstObjNumber, secondObjNumber);
+                    flag = false;
+                    break;
+                }
+            }
+            if (flag) {
+                compareMVNSecondNull(mvnsFirst.get(i), i, firstObjNumber);
+            }
+        }
 
+        for (int i = 0; i < mvnsSecond.size(); ++i) {
+            boolean flag = true;
+            for (int j = 0; j < mvnsFirst.size(); ++j) {
+                if (mvnsFirst.get(j).equals(mvnsSecond.get(i))) {
+                    flag = false;
+                    break;
+                }
+            }
+            if (flag) {
+                compareMVNFirstNull(mvnsSecond.get(i), i, secondObjNumber);
+            }
+        }
+    }
+
+    private void compareMVNSecondNull(MVN mvn, int objNumber, int mvnNumber) {
+        Difference diffNull = new Difference(mvn, null);
+
+        // mandatory fields
+        diffNull.addOperation(Operations.DELETE);
+        diffNull.addPathFirstModel("artifacts/" + mvnNumber + "/mvn/" + objNumber + "/groupId");
+        diffNull.addOperation(Operations.DELETE);
+        diffNull.addPathFirstModel("artifacts/" + mvnNumber + "/mvn/" + objNumber + "/artifactId");
+        diffNull.addOperation(Operations.DELETE);
+        diffNull.addPathFirstModel("artifacts/" + mvnNumber + "/mvn/" + objNumber + "/version");
+        diffNull.addOperation(Operations.DELETE);
+        diffNull.addPathFirstModel("artifacts/" + mvnNumber + "/mvn/" + objNumber + "/mvn_type");
+        diffNull.addOperation(Operations.DELETE);
+        diffNull.addPathFirstModel("artifacts/" + mvnNumber + "/mvn/" + objNumber + "/mvn_repository");
+        diffNull.addOperation(Operations.DELETE);
+        diffNull.addPathFirstModel("artifacts/" + mvnNumber + "/mvn/" + objNumber + "/hashes");
+
+        // optional fields
+        if (mvn.getServiceName() != null) {
+            diffNull.addOperation(Operations.DELETE);
+            diffNull.addPathFirstModel("artifacts/" + mvnNumber + "/mvn/" + objNumber + "/service_name");
+        }
+        if (mvn.getClassifier() != null) {
+            diffNull.addOperation(Operations.DELETE);
+            diffNull.addPathFirstModel("artifacts/" + mvnNumber + "/mvn/" + objNumber + "/classifier");
+        }
+
+        diffLinkedList.addLast(diffNull);
+    }
+
+    private void compareMVNFirstNull(MVN mvn, int objNumber, int mvnNumber) {
+        Difference diffNull = new Difference(null, mvn);
+
+        // mandatory fields
+        diffNull.addOperation(Operations.ADD);
+        diffNull.addPathSecondModel("artifacts/" + mvnNumber + "/mvn/" + objNumber + "/groupId");
+        diffNull.addOperation(Operations.ADD);
+        diffNull.addPathSecondModel("artifacts/" + mvnNumber + "/mvn/" + objNumber + "/artifactId");
+        diffNull.addOperation(Operations.ADD);
+        diffNull.addPathSecondModel("artifacts/" + mvnNumber + "/mvn/" + objNumber + "/version");
+        diffNull.addOperation(Operations.ADD);
+        diffNull.addPathSecondModel("artifacts/" + mvnNumber + "/mvn/" + objNumber + "/mvn_type");
+        diffNull.addOperation(Operations.ADD);
+        diffNull.addPathSecondModel("artifacts/" + mvnNumber + "/mvn/" + objNumber + "/mvn_repository");
+        diffNull.addOperation(Operations.ADD);
+        diffNull.addPathSecondModel("artifacts/" + mvnNumber + "/mvn/" + objNumber + "/hashes");
+
+        // optional fields
+        if (mvn.getServiceName() != null) {
+            diffNull.addOperation(Operations.ADD);
+            diffNull.addPathSecondModel("artifacts/" + mvnNumber + "/mvn/" + objNumber + "/service_name");
+        }
+        if (mvn.getClassifier() != null) {
+            diffNull.addOperation(Operations.ADD);
+            diffNull.addPathSecondModel("artifacts/" + mvnNumber + "/mvn/" + objNumber + "/classifier");
+        }
+
+        diffLinkedList.addLast(diffNull);
+    }
+
+    private void compareMVN(MVN mvnFirst, MVN mvnSecond, int firstObjNumber, int secondObjNumber,
+                                                            int firstMVNNumber, int secondMVNNumber) {
+        Difference mvnDifference = new Difference(mvnFirst,mvnSecond);
+
+        //comparison service_name field
+        if (mvnFirst.getServiceName() != null && mvnSecond.getServiceName() != null) {
+            if (mvnFirst.getServiceName().equals(mvnSecond.getServiceName())) {
+                addDataInDiff(mvnDifference,Operations.REPLACE,
+                        "artifacts/" + firstMVNNumber + "/mvn/" + firstObjNumber + "/service_name",
+                        "artifacts/" + secondMVNNumber + "/mvn/" + secondObjNumber + "/service_name");
+            }
+        } else if (mvnFirst.getServiceName() != null) {
+            addDataInDiff(mvnDifference,Operations.DELETE,
+                    "artifacts/" + firstMVNNumber + "/mvn/" + firstObjNumber + "/service_name",
+                    "artifacts/" + secondMVNNumber + "/mvn/" + secondObjNumber + "/service_name");
+        } else if (mvnSecond.getServiceName() != null) {
+            addDataInDiff(mvnDifference,Operations.ADD,
+                    "artifacts/" + firstMVNNumber + "/mvn/" + firstObjNumber + "/service_name",
+                    "artifacts/" + secondMVNNumber + "/mvn/" + secondObjNumber + "/service_name");
+        }
+
+        //comparison classifier field
+        if (mvnFirst.getServiceName() != null && mvnSecond.getServiceName() != null) {
+            if (mvnFirst.getServiceName().equals(mvnSecond.getServiceName())) {
+                addDataInDiff(mvnDifference,Operations.REPLACE,
+                        "artifacts/" + firstMVNNumber + "/mvn/" + firstObjNumber + "/classifier",
+                        "artifacts/" + secondMVNNumber + "/mvn/" + secondObjNumber + "/classifier");
+            }
+        } else if (mvnFirst.getServiceName() != null) {
+            addDataInDiff(mvnDifference,Operations.DELETE,
+                    "artifacts/" + firstMVNNumber + "/mvn/" + firstObjNumber + "/classifier",
+                    "artifacts/" + secondMVNNumber + "/mvn/" + secondObjNumber + "/classifier");
+        } else if (mvnSecond.getServiceName() != null) {
+            addDataInDiff(mvnDifference,Operations.ADD,
+                    "artifacts/" + firstMVNNumber + "/mvn/" + firstObjNumber + "/classifier",
+                    "artifacts/" + secondMVNNumber + "/mvn/" + secondObjNumber + "/classifier");
+        }
+
+        if (mvnDifference.checkDifference()) {
+            diffLinkedList.addLast(mvnDifference);
+        }
+    }
+
+    private void compareArtifactSecondNull(Artifact artifact, int objNumber) {
+        Difference diffNull = new Difference(artifact, null);
+
+        // mandatory fields
+        diffNull.addOperation(Operations.DELETE);
+        diffNull.addPathFirstModel("artifacts/" + objNumber + "/hashes");
+        diffNull.addOperation(Operations.DELETE);
+        diffNull.addPathFirstModel("artifacts/" + objNumber + "/file");
+        diffNull.addOperation(Operations.DELETE);
+        diffNull.addPathFirstModel("artifacts/" + objNumber + "/target_repository");
+        diffNull.addOperation(Operations.DELETE);
+
+        // optional fields
+        if (artifact.getServiceShortName() != null) {
+            diffNull.addOperation(Operations.DELETE);
+            diffNull.addPathFirstModel("artifacts/" + objNumber + "/service-short-name");
+        }
+        if (artifact.getServiceName() != null) {
+            diffNull.addOperation(Operations.DELETE);
+            diffNull.addPathFirstModel("artifacts/" + objNumber + "/service_name");
+        }
+
+        diffLinkedList.addLast(diffNull);
     }
 
     private void compareArtifactFirstNull(Artifact artifact, int objNumber) {
+        Difference diffNull = new Difference(null, artifact);
 
+        // mandatory fields
+        diffNull.addOperation(Operations.ADD);
+        diffNull.addPathSecondModel("artifacts/" + objNumber + "/hashes");
+        diffNull.addOperation(Operations.ADD);
+        diffNull.addPathSecondModel("artifacts/" + objNumber + "/file");
+        diffNull.addOperation(Operations.ADD);
+        diffNull.addPathSecondModel("artifacts/" + objNumber + "/target_repository");
+        diffNull.addOperation(Operations.ADD);
+
+        // optional fields
+        if (artifact.getServiceShortName() != null) {
+            diffNull.addOperation(Operations.ADD);
+            diffNull.addPathSecondModel("artifacts/" + objNumber + "/service-short-name");
+        }
+        if (artifact.getServiceName() != null) {
+            diffNull.addOperation(Operations.ADD);
+            diffNull.addPathSecondModel("artifacts/" + objNumber + "/service_name");
+        }
+
+        diffLinkedList.addLast(diffNull);
     }
 
     private void compareArtifact(Artifact artifactFirst, Artifact artifactSecond,
                                             int firstObjNumber, int secondObjNumber) {
 
-        Difference serviceDifference = new Difference(artifactFirst,artifactSecond);
+        Difference artifactDifference = new Difference(artifactFirst,artifactSecond);
 
-        if (artifactFirst.isOther() && artifactSecond.isOther()) {
-            if (artifactFirst.getServiceShortName() != null && artifactSecond.getServiceShortName() != null) {
-                if (artifactFirst.getServiceShortName().equals(artifactSecond.getServiceShortName())) {
-                    addDataInDiff(serviceDifference,Operations.REPLACE,
-                            "artifacts/" + firstObjNumber + "/service-short-name",
-                            "artifacts/" + secondObjNumber + "/service-short-name");
-                }
-            } else if (artifactFirst.getServiceShortName() != null) {
-                addDataInDiff(serviceDifference,Operations.DELETE,
-                        "artifacts/" + firstObjNumber + "/service-short-name",
-                        "artifacts/" + secondObjNumber + "/service-short-name");
-            } else if (artifactSecond.getServiceShortName() != null) {
-                addDataInDiff(serviceDifference,Operations.ADD,
+        if (artifactFirst.getServiceShortName() != null && artifactSecond.getServiceShortName() != null) {
+            if (artifactFirst.getServiceShortName().equals(artifactSecond.getServiceShortName())) {
+                addDataInDiff(artifactDifference,Operations.REPLACE,
                         "artifacts/" + firstObjNumber + "/service-short-name",
                         "artifacts/" + secondObjNumber + "/service-short-name");
             }
+        } else if (artifactFirst.getServiceShortName() != null) {
+            addDataInDiff(artifactDifference,Operations.DELETE,
+                    "artifacts/" + firstObjNumber + "/service-short-name",
+                    "artifacts/" + secondObjNumber + "/service-short-name");
+        } else if (artifactSecond.getServiceShortName() != null) {
+            addDataInDiff(artifactDifference,Operations.ADD,
+                    "artifacts/" + firstObjNumber + "/service-short-name",
+                    "artifacts/" + secondObjNumber + "/service-short-name");
+        }
 
-            if (artifactFirst.getServiceName() != null && artifactSecond.getServiceName() != null) {
-                if (artifactFirst.getServiceName().equals(artifactSecond.getServiceName())) {
-                    addDataInDiff(serviceDifference,Operations.REPLACE,
-                            "artifacts/" + firstObjNumber + "/service_name",
-                            "artifacts/" + secondObjNumber + "/service_name");
-                }
-            } else if (artifactFirst.getServiceName() != null) {
-                addDataInDiff(serviceDifference,Operations.DELETE,
-                        "artifacts/" + firstObjNumber + "/service_name",
-                        "artifacts/" + secondObjNumber + "/service_name");
-            } else if (artifactSecond.getServiceName() != null) {
-                addDataInDiff(serviceDifference,Operations.ADD,
+        if (artifactFirst.getServiceName() != null && artifactSecond.getServiceName() != null) {
+            if (artifactFirst.getServiceName().equals(artifactSecond.getServiceName())) {
+                addDataInDiff(artifactDifference,Operations.REPLACE,
                         "artifacts/" + firstObjNumber + "/service_name",
                         "artifacts/" + secondObjNumber + "/service_name");
             }
-        } else if (artifactFirst.isMVN() && artifactSecond.isMVN()) {
-            if (artifactFirst.getServiceName() != null && artifactSecond.getServiceName() != null) {
-                if (artifactFirst.getServiceName().equals(artifactSecond.getServiceName())) {
-                    addDataInDiff(serviceDifference,Operations.REPLACE,
-                            "artifacts/" + firstObjNumber + "/service_name",
-                            "artifacts/" + secondObjNumber + "/service_name");
-                }
-            } else if (artifactFirst.getServiceName() != null) {
-                addDataInDiff(serviceDifference,Operations.DELETE,
-                        "artifacts/" + firstObjNumber + "/service_name",
-                        "artifacts/" + secondObjNumber + "/service_name");
-            } else if (artifactSecond.getServiceName() != null) {
-                addDataInDiff(serviceDifference,Operations.ADD,
-                        "artifacts/" + firstObjNumber + "/service_name",
-                        "artifacts/" + secondObjNumber + "/service_name");
-            }
+        } else if (artifactFirst.getServiceName() != null) {
+            addDataInDiff(artifactDifference,Operations.DELETE,
+                    "artifacts/" + firstObjNumber + "/service_name",
+                    "artifacts/" + secondObjNumber + "/service_name");
+        } else if (artifactSecond.getServiceName() != null) {
+            addDataInDiff(artifactDifference,Operations.ADD,
+                    "artifacts/" + firstObjNumber + "/service_name",
+                    "artifacts/" + secondObjNumber + "/service_name");
+        }
+
+        if (artifactDifference.checkDifference()) {
+            diffLinkedList.addLast(artifactDifference);
         }
     }
 
@@ -629,7 +821,166 @@ public class JSONComparator {
                     "rpm/" + secondObjNumber + "/service-short-name");
         }
 
-        diffLinkedList.addLast(rpmDifference);
+        if (rpmDifference.checkDifference()) {
+            diffLinkedList.addLast(rpmDifference);
+        }
+    }
+
+    private void compareParameters(Parameters parametersFirst, Parameters parametersSecond) {
+        // comparison common fields
+        compareCommon(parametersFirst.getCommon(), parametersSecond.getCommon());
+
+        // comparison services fields
+        compareServiceName(parametersFirst.getServices(), parametersSecond.getServices());
+    }
+
+    private void compareCommon(Common commonFirst, Common commonSecond) {
+
+        Difference commonDifference = new Difference(commonFirst, commonSecond);
+
+        if (commonFirst != null && commonSecond != null) {
+            if (commonFirst.equals(commonSecond)) {
+                // comparison some-other-param field
+                if (commonFirst.getSomeOtherParam() != null && commonSecond.getSomeOtherParam() != null) {
+                    if (!commonFirst.getSomeOtherParam().equals(commonSecond.getSomeOtherParam())) {
+                        addDataInDiff(commonDifference, Operations.REPLACE,
+                                "parameters/common/some-other-param",
+                                "parameters/common/some-other-param");
+                    }
+                } else if (commonFirst.getSomeOtherParam() != null) {
+                    addDataInDiff(commonDifference, Operations.DELETE,
+                            "parameters/common/some-other-param",
+                            "parameters/common/some-other-param");
+                } else if (commonSecond.getSomeOtherParam() != null) {
+                    addDataInDiff(commonDifference, Operations.ADD,
+                            "parameters/common/some-other-param",
+                            "parameters/common/some-other-param");
+                }
+
+                // comparison some-else-param field
+                if (commonFirst.getSomeElseParam() != null && commonSecond.getSomeElseParam() != null) {
+                    if (!commonFirst.getSomeElseParam().equals(commonSecond.getSomeElseParam())) {
+                        addDataInDiff(commonDifference, Operations.REPLACE,
+                                "parameters/common/some-else-param",
+                                "parameters/common/some-else-param");
+                    }
+                } else if (commonFirst.getSomeElseParam() != null) {
+                    addDataInDiff(commonDifference, Operations.DELETE,
+                            "parameters/common/some-else-param",
+                            "parameters/common/some-else-param");
+                } else if (commonSecond.getSomeElseParam() != null) {
+                    addDataInDiff(commonDifference, Operations.ADD,
+                            "parameters/common/some-else-param",
+                            "parameters/common/some-else-param");
+                }
+            }
+        } else if (commonFirst != null) {
+            // mandatory fields
+            commonDifference.addOperation(Operations.DELETE);
+            commonDifference.addPathFirstModel("parameters/common/some-param");
+
+            // optional fields
+            if (commonFirst.getSomeOtherParam() != null) {
+                commonDifference.addOperation(Operations.DELETE);
+                commonDifference.addPathFirstModel("parameters/common/some-other-param");
+            }
+            if (commonFirst.getSomeElseParam() != null) {
+                commonDifference.addOperation(Operations.DELETE);
+                commonDifference.addPathFirstModel("parameters/common/some-else-param");
+            }
+        } else if (commonSecond != null) {
+            // mandatory fields
+            commonDifference.addOperation(Operations.ADD);
+            commonDifference.addPathSecondModel("parameters/common/some-param");
+
+            // optional fields
+            if (commonSecond.getSomeOtherParam() != null) {
+                commonDifference.addOperation(Operations.ADD);
+                commonDifference.addPathSecondModel("parameters/common/some-other-param");
+            }
+            if (commonSecond.getSomeElseParam() != null) {
+                commonDifference.addOperation(Operations.ADD);
+                commonDifference.addPathSecondModel("parameters/common/some-else-param");
+            }
+        }
+
+        if (commonDifference.checkDifference()) {
+            diffLinkedList.addLast(commonDifference);
+        }
+    }
+
+    private void compareServiceName(ServiceName serviceNameFirst, ServiceName serviceNameSecond) {
+        Difference commonDifference = new Difference(serviceNameFirst, serviceNameSecond);
+
+        if (serviceNameFirst != null && serviceNameSecond != null) {
+            if (commonFirst.equals(commonSecond)) {
+                // comparison some-other-param field
+                if (commonFirst.getSomeOtherParam() != null && commonSecond.getSomeOtherParam() != null) {
+                    if (!commonFirst.getSomeOtherParam().equals(commonSecond.getSomeOtherParam())) {
+                        addDataInDiff(commonDifference, Operations.REPLACE,
+                                "parameters/common/some-other-param",
+                                "parameters/common/some-other-param");
+                    }
+                } else if (commonFirst.getSomeOtherParam() != null) {
+                    addDataInDiff(commonDifference, Operations.DELETE,
+                            "parameters/common/some-other-param",
+                            "parameters/common/some-other-param");
+                } else if (commonSecond.getSomeOtherParam() != null) {
+                    addDataInDiff(commonDifference, Operations.ADD,
+                            "parameters/common/some-other-param",
+                            "parameters/common/some-other-param");
+                }
+
+                // comparison some-else-param field
+                if (commonFirst.getSomeElseParam() != null && commonSecond.getSomeElseParam() != null) {
+                    if (!commonFirst.getSomeElseParam().equals(commonSecond.getSomeElseParam())) {
+                        addDataInDiff(commonDifference, Operations.REPLACE,
+                                "parameters/common/some-else-param",
+                                "parameters/common/some-else-param");
+                    }
+                } else if (commonFirst.getSomeElseParam() != null) {
+                    addDataInDiff(commonDifference, Operations.DELETE,
+                            "parameters/common/some-else-param",
+                            "parameters/common/some-else-param");
+                } else if (commonSecond.getSomeElseParam() != null) {
+                    addDataInDiff(commonDifference, Operations.ADD,
+                            "parameters/common/some-else-param",
+                            "parameters/common/some-else-param");
+                }
+            }
+        } else if (commonFirst != null) {
+            // mandatory fields
+            commonDifference.addOperation(Operations.DELETE);
+            commonDifference.addPathFirstModel("parameters/common/some-param");
+
+            // optional fields
+            if (commonFirst.getSomeOtherParam() != null) {
+                commonDifference.addOperation(Operations.DELETE);
+                commonDifference.addPathFirstModel("parameters/common/some-other-param");
+            }
+            if (commonFirst.getSomeElseParam() != null) {
+                commonDifference.addOperation(Operations.DELETE);
+                commonDifference.addPathFirstModel("parameters/common/some-else-param");
+            }
+        } else if (commonSecond != null) {
+            // mandatory fields
+            commonDifference.addOperation(Operations.ADD);
+            commonDifference.addPathSecondModel("parameters/common/some-param");
+
+            // optional fields
+            if (commonSecond.getSomeOtherParam() != null) {
+                commonDifference.addOperation(Operations.ADD);
+                commonDifference.addPathSecondModel("parameters/common/some-other-param");
+            }
+            if (commonSecond.getSomeElseParam() != null) {
+                commonDifference.addOperation(Operations.ADD);
+                commonDifference.addPathSecondModel("parameters/common/some-else-param");
+            }
+        }
+
+        if (commonDifference.checkDifference()) {
+            diffLinkedList.addLast(commonDifference);
+        }
     }
 
     public LinkedList<Difference> getDiffsList() {

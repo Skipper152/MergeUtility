@@ -96,16 +96,16 @@ public class Artifact extends AbstractModel {
 
     public Boolean isMVN() {
         HashMap<String,Boolean> validateMap = validate();
-        return !(validateMap.get("service-short-name") || validateMap.get("service_name") ||
-                validateMap.get("hashes") || validateMap.get("file")) &&
-                validateMap.get("mvn");
+        return (validateMap.get("service-short-name") && validateMap.get("service_name") &&
+                validateMap.get("hashes") && validateMap.get("file")) &&
+                !validateMap.get("mvn");
     }
 
     public Boolean isOther() {
         HashMap<String,Boolean> validateMap = validate();
-        return (validateMap.get("service-short-name") || validateMap.get("service_name") ||
-                validateMap.get("hashes") || validateMap.get("file")) &&
-                !validateMap.get("mvn");
+        return (!validateMap.get("service-short-name") || !validateMap.get("service_name") ||
+                !validateMap.get("hashes") || !validateMap.get("file")) &&
+                validateMap.get("mvn");
     }
 
     @Override
@@ -121,9 +121,7 @@ public class Artifact extends AbstractModel {
 
         Artifact artifact = (Artifact) model;
 
-        if (this.isMVN() && artifact.isMVN()) {
-            return mvns.equals(artifact.getMvns());
-        } else if (this.isOther() && artifact.isOther()) {
+        if (this.isOther() && artifact.isOther()) {
             return hashes.equals(artifact.getHashes()) &&
                     files.get(0).equals(artifact.getFiles().get(0)) &&
                     targetRepository.equals(artifact.getTargetRepository());
