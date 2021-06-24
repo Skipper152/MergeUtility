@@ -2,9 +2,7 @@ package com.netcracker.operations;
 
 import com.netcracker.models.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.*;
 
 public class JSONComparator {
 
@@ -910,76 +908,105 @@ public class JSONComparator {
     }
 
     private void compareServiceName(ServiceName serviceNameFirst, ServiceName serviceNameSecond) {
-        Difference commonDifference = new Difference(serviceNameFirst, serviceNameSecond);
+        Difference servicesDifference = new Difference(serviceNameFirst, serviceNameSecond);
 
         if (serviceNameFirst != null && serviceNameSecond != null) {
-            if (commonFirst.equals(commonSecond)) {
-                // comparison some-other-param field
-                if (commonFirst.getSomeOtherParam() != null && commonSecond.getSomeOtherParam() != null) {
-                    if (!commonFirst.getSomeOtherParam().equals(commonSecond.getSomeOtherParam())) {
-                        addDataInDiff(commonDifference, Operations.REPLACE,
-                                "parameters/common/some-other-param",
-                                "parameters/common/some-other-param");
-                    }
-                } else if (commonFirst.getSomeOtherParam() != null) {
-                    addDataInDiff(commonDifference, Operations.DELETE,
-                            "parameters/common/some-other-param",
-                            "parameters/common/some-other-param");
-                } else if (commonSecond.getSomeOtherParam() != null) {
-                    addDataInDiff(commonDifference, Operations.ADD,
-                            "parameters/common/some-other-param",
-                            "parameters/common/some-other-param");
-                }
-
-                // comparison some-else-param field
-                if (commonFirst.getSomeElseParam() != null && commonSecond.getSomeElseParam() != null) {
-                    if (!commonFirst.getSomeElseParam().equals(commonSecond.getSomeElseParam())) {
-                        addDataInDiff(commonDifference, Operations.REPLACE,
-                                "parameters/common/some-else-param",
-                                "parameters/common/some-else-param");
-                    }
-                } else if (commonFirst.getSomeElseParam() != null) {
-                    addDataInDiff(commonDifference, Operations.DELETE,
-                            "parameters/common/some-else-param",
-                            "parameters/common/some-else-param");
-                } else if (commonSecond.getSomeElseParam() != null) {
-                    addDataInDiff(commonDifference, Operations.ADD,
-                            "parameters/common/some-else-param",
-                            "parameters/common/some-else-param");
-                }
-            }
-        } else if (commonFirst != null) {
-            // mandatory fields
-            commonDifference.addOperation(Operations.DELETE);
-            commonDifference.addPathFirstModel("parameters/common/some-param");
-
-            // optional fields
-            if (commonFirst.getSomeOtherParam() != null) {
-                commonDifference.addOperation(Operations.DELETE);
-                commonDifference.addPathFirstModel("parameters/common/some-other-param");
-            }
-            if (commonFirst.getSomeElseParam() != null) {
-                commonDifference.addOperation(Operations.DELETE);
-                commonDifference.addPathFirstModel("parameters/common/some-else-param");
-            }
-        } else if (commonSecond != null) {
-            // mandatory fields
-            commonDifference.addOperation(Operations.ADD);
-            commonDifference.addPathSecondModel("parameters/common/some-param");
-
-            // optional fields
-            if (commonSecond.getSomeOtherParam() != null) {
-                commonDifference.addOperation(Operations.ADD);
-                commonDifference.addPathSecondModel("parameters/common/some-other-param");
-            }
-            if (commonSecond.getSomeElseParam() != null) {
-                commonDifference.addOperation(Operations.ADD);
-                commonDifference.addPathSecondModel("parameters/common/some-else-param");
-            }
+            compareMapsServiceName(serviceNameFirst.getServiceName(), serviceNameSecond.getServiceName(), servicesDifference, "service_name");
+            compareMapsServiceName(serviceNameFirst.getServiceName1(), serviceNameSecond.getServiceName1(), servicesDifference, "service_name_1");
+            compareMapsServiceName(serviceNameFirst.getServiceName2(), serviceNameSecond.getServiceName2(), servicesDifference, "service_name_2");
+        } else if (serviceNameFirst != null) {
+            serviceNameSecondNull(serviceNameFirst.getServiceName(), servicesDifference, "service_name");
+            serviceNameSecondNull(serviceNameFirst.getServiceName1(), servicesDifference, "service_name_1");
+            serviceNameSecondNull(serviceNameFirst.getServiceName2(), servicesDifference, "service_name_2");
+        } else if (serviceNameSecond != null) {
+            serviceNameFirstNull(serviceNameSecond.getServiceName(), servicesDifference, "service_name");
+            serviceNameFirstNull(serviceNameSecond.getServiceName1(), servicesDifference, "service_name_1");
+            serviceNameFirstNull(serviceNameSecond.getServiceName2(), servicesDifference, "service_name_2");
         }
 
-        if (commonDifference.checkDifference()) {
-            diffLinkedList.addLast(commonDifference);
+        if (servicesDifference.checkDifference()) {
+            diffLinkedList.addLast(servicesDifference);
+        }
+    }
+
+    private void compareMapsServiceName(HashMap<String,String> firstMap, HashMap<String,String> secondMap,
+                                                                        Difference difference, String field) {
+        if (firstMap != null && secondMap != null) {
+            for (Map.Entry<String, String> entry : firstMap.entrySet()) {
+                if (secondMap.containsKey(entry.getKey())) {
+                    if (entry.getValue() != null && secondMap.get(entry.getKey()) != null) {
+                        if (!entry.getValue().equals(secondMap.get(entry.getKey()))) {
+                            addDataInDiff(difference, Operations.REPLACE,
+                                    "parameters/services/" + field + "/" + entry.getKey(),
+                                    "parameters/services/" + field + "/" + entry.getKey());
+                        }
+                    } else if (entry.getValue() != null) {
+                        addDataInDiff(difference, Operations.DELETE,
+                                "parameters/services/" + field + "/" + entry.getKey(),
+                                "parameters/services/" + field + "/" + entry.getKey());
+                    } else if (secondMap.get(entry.getKey()) != null) {
+                        addDataInDiff(difference, Operations.ADD,
+                                "parameters/services/" + field + "/" + entry.getKey(),
+                                "parameters/services/" + field + "/" + entry.getKey());
+                    }
+                } else {
+                    difference.addOperation(Operations.DELETE);
+                    difference.addPathFirstModel("parameters/services/" + field + "/" + entry.getKey());
+                }
+            }
+
+            for (Map.Entry<String, String> entry : secondMap.entrySet()) {
+                if (!firstMap.containsKey(entry.getKey())) {
+                    difference.addOperation(Operations.ADD);
+                    difference.addPathSecondModel("parameters/services/" + field + "/" + entry.getKey());
+                }
+            }
+        } else if (firstMap != null) {
+            for (Map.Entry<String, String> entry : firstMap.entrySet()) {
+                difference.addOperation(Operations.DELETE);
+                difference.addPathFirstModel("parameters/services/" + field + "/" + entry.getKey());
+                /*addDataInDiff(difference, Operations.DELETE,
+                        "parameters/services/service_name/" + entry.getKey(),
+                        "parameters/services/service_name/" + entry.getKey());*/
+            }
+        } else if (secondMap != null) {
+            for (Map.Entry<String, String> entry : secondMap.entrySet()) {
+                difference.addOperation(Operations.ADD);
+                difference.addPathSecondModel("parameters/services/" + field + "/" + entry.getKey());
+                /*addDataInDiff(difference, Operations.ADD,
+                        "parameters/services/service_name/" + entry.getKey(),
+                        "parameters/services/service_name/" + entry.getKey());*/
+            }
+        }
+    }
+
+    private void serviceNameSecondNull(HashMap<String,String> firstMap, Difference difference, String field) {
+        if (firstMap != null) {
+            for (Map.Entry<String, String> entry : firstMap.entrySet()) {
+                difference.addOperation(Operations.DELETE);
+                difference.addPathFirstModel("parameters/services/" + field + "/" + entry.getKey());
+                /*addDataInDiff(difference, Operations.DELETE,
+                        "parameters/services/service_name/" + entry.getKey(),
+                        "parameters/services/service_name/" + entry.getKey());*/
+            }
+        } else {
+            difference.addOperation(Operations.DELETE);
+            difference.addPathFirstModel("parameters/services/" + field);
+        }
+    }
+
+    private void serviceNameFirstNull(HashMap<String,String> secondMap, Difference difference, String field) {
+        if (secondMap != null) {
+            for (Map.Entry<String, String> entry : secondMap.entrySet()) {
+                difference.addOperation(Operations.ADD);
+                difference.addPathSecondModel("parameters/services/" + field + "/" + entry.getKey());
+                /*addDataInDiff(difference, Operations.DELETE,
+                        "parameters/services/service_name/" + entry.getKey(),
+                        "parameters/services/service_name/" + entry.getKey());*/
+            }
+        } else {
+            difference.addOperation(Operations.ADD);
+            difference.addPathSecondModel("parameters/services/" + field);
         }
     }
 

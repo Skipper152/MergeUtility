@@ -64,12 +64,25 @@ public class ServiceName extends AbstractModel {
         if (this.getClass() != model.getClass())
             return false;
 
-        ServiceName serviceName = (ServiceName) model;
+        ServiceName services = (ServiceName) model;
 
-        String someThirdParamFirst = this.serviceName.get("service_name");
-        String someThirdParamSecond = serviceName.getServiceName().get("service_name");
+        if (this.serviceName != null) {
+            String someThirdParamFirst = null;
+            String someThirdParamSecond = null;
+            if (this.serviceName.containsKey("some-third-param")) {
+                someThirdParamFirst = this.serviceName.get("service_name");
+            }
+            if (services.getServiceName() != null) {
+                if (services.getServiceName().containsKey("some-third-param")) {
+                    someThirdParamSecond = services.getServiceName().get("service_name");
+                }
+            }
+            if (someThirdParamFirst != null && someThirdParamSecond != null) {
+                return someThirdParamFirst.equals(someThirdParamSecond);
+            }
+        }
 
-        return this.serviceName.equals(serviceName.getSomeParam());
+        return false;
     }
 
     @Override
