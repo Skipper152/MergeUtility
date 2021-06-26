@@ -1,0 +1,19 @@
+{
+  "field1": {
+    "subfield1": {
+      "value1": 1,
+      "value2": 2,
+      "value3": 3
+    },
+    "subfield2": {
+      "value1": 1,
+      "value2": 2,
+      "value3": 3
+    },
+    "subfield3": {
+      "value1": 1,
+      "value2": 2,
+      "value3": 3
+    }
+  }
+}
