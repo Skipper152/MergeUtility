@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.HashMap;
+import java.util.Map;
 
 // object, optional
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -85,13 +86,44 @@ public class ServiceName extends AbstractModel {
         return false;
     }
 
+    private StringBuilder getServiceNameString(Map<String,String> sn) {
+
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("{");
+
+        int sizeMap = sn.size();
+        int i = 0;
+
+        for (Map.Entry<String,String> entry : sn.entrySet()) {
+            stringBuilder.append("\"" + entry.getKey() + "\": " + "\"" + entry.getValue() + "\"");
+            ++i;
+            if (i != sizeMap) {
+                stringBuilder.append(", ");
+            }
+
+        }
+        stringBuilder.append("}");
+
+
+        return stringBuilder;
+    }
+
     @Override
     public String toString() {
-        return "{" +
-                "\"service_name\": " + serviceName +
-                ", \"service_name_1\":" + serviceName1 +
-                ", \"service_name_2\":" + serviceName2 +
-                '}';
+
+        StringBuilder stringBuilder = new StringBuilder();
+
+        stringBuilder.append("{\"service_name\": ");
+        stringBuilder.append(getServiceNameString(serviceName));
+        stringBuilder.append(", ");
+        stringBuilder.append("\"service_name_1\": ");
+        stringBuilder.append(getServiceNameString(serviceName1));
+        stringBuilder.append(", ");
+        stringBuilder.append("\"service_name_2\": ");
+        stringBuilder.append(getServiceNameString(serviceName2));
+        stringBuilder.append("}");
+
+        return stringBuilder.toString();
     }
 
     @Override

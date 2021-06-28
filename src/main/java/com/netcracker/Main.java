@@ -1,11 +1,9 @@
 package com.netcracker;
 
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.netcracker.models.JSONModel;
 import com.netcracker.operations.Difference;
 import com.netcracker.operations.JSONComparator;
-import com.netcracker.operations.Validator;
 
 
 import java.io.File;
@@ -31,6 +29,5 @@ public class Main {
 
         //System.out.println(jsonModel1);
         //System.out.println(jsonModel2);
-
     }
 }

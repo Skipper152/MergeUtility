@@ -950,32 +950,39 @@ public class JSONComparator {
                                 "parameters/services/" + field + "/" + entry.getKey());
                     }
                 } else {
-                    difference.addOperation(Operations.DELETE);
-                    difference.addPathFirstModel("parameters/services/" + field + "/" + entry.getKey());
+                    addDataInDiff(difference, Operations.DELETE,
+                            "parameters/services/" + field + "/" + entry.getKey(),
+                            "parameters/services/" + field);
+                    /*difference.addOperation(Operations.DELETE);
+                    difference.addPathFirstModel("parameters/services/" + field + "/" + entry.getKey());*/
+
                 }
             }
 
             for (Map.Entry<String, String> entry : secondMap.entrySet()) {
                 if (!firstMap.containsKey(entry.getKey())) {
-                    difference.addOperation(Operations.ADD);
-                    difference.addPathSecondModel("parameters/services/" + field + "/" + entry.getKey());
+                    addDataInDiff(difference, Operations.ADD,
+                            "parameters/services/" + field,
+                            "parameters/services/" + field + "/" + entry.getKey());
+                    /*difference.addOperation(Operations.ADD);
+                    difference.addPathSecondModel("parameters/services/" + field + "/" + entry.getKey());*/
                 }
             }
         } else if (firstMap != null) {
             for (Map.Entry<String, String> entry : firstMap.entrySet()) {
-                difference.addOperation(Operations.DELETE);
-                difference.addPathFirstModel("parameters/services/" + field + "/" + entry.getKey());
-                /*addDataInDiff(difference, Operations.DELETE,
-                        "parameters/services/service_name/" + entry.getKey(),
-                        "parameters/services/service_name/" + entry.getKey());*/
+                /*difference.addOperation(Operations.DELETE);
+                difference.addPathFirstModel("parameters/services/" + field + "/" + entry.getKey());*/
+                addDataInDiff(difference, Operations.DELETE,
+                        "parameters/services/" + field + "/" + entry.getKey(),
+                        "parameters/services/");
             }
         } else if (secondMap != null) {
             for (Map.Entry<String, String> entry : secondMap.entrySet()) {
-                difference.addOperation(Operations.ADD);
-                difference.addPathSecondModel("parameters/services/" + field + "/" + entry.getKey());
-                /*addDataInDiff(difference, Operations.ADD,
-                        "parameters/services/service_name/" + entry.getKey(),
-                        "parameters/services/service_name/" + entry.getKey());*/
+                /*difference.addOperation(Operations.ADD);
+                difference.addPathSecondModel("parameters/services/" + field + "/" + entry.getKey());*/
+                addDataInDiff(difference, Operations.ADD,
+                        "parameters/services/", //какое-то из полей service_name_* нулевое
+                        "parameters/services/" + field + "/" + entry.getKey());
             }
         }
     }
@@ -983,30 +990,36 @@ public class JSONComparator {
     private void serviceNameSecondNull(HashMap<String,String> firstMap, Difference difference, String field) {
         if (firstMap != null) {
             for (Map.Entry<String, String> entry : firstMap.entrySet()) {
-                difference.addOperation(Operations.DELETE);
-                difference.addPathFirstModel("parameters/services/" + field + "/" + entry.getKey());
-                /*addDataInDiff(difference, Operations.DELETE,
-                        "parameters/services/service_name/" + entry.getKey(),
-                        "parameters/services/service_name/" + entry.getKey());*/
+                /*difference.addOperation(Operations.DELETE);
+                difference.addPathFirstModel("parameters/services/" + field + "/" + entry.getKey());*/
+                addDataInDiff(difference, Operations.DELETE,
+                        "parameters/services/" + field + "/" + entry.getKey(),
+                        "parameters/");
             }
         } else {
-            difference.addOperation(Operations.DELETE);
-            difference.addPathFirstModel("parameters/services/" + field);
+            /*difference.addOperation(Operations.DELETE);
+            difference.addPathFirstModel("parameters/services/" + field);*/
+            addDataInDiff(difference, Operations.DELETE,
+                    "parameters/services/",
+                    "parameters/");
         }
     }
 
     private void serviceNameFirstNull(HashMap<String,String> secondMap, Difference difference, String field) {
         if (secondMap != null) {
             for (Map.Entry<String, String> entry : secondMap.entrySet()) {
-                difference.addOperation(Operations.ADD);
-                difference.addPathSecondModel("parameters/services/" + field + "/" + entry.getKey());
-                /*addDataInDiff(difference, Operations.DELETE,
-                        "parameters/services/service_name/" + entry.getKey(),
-                        "parameters/services/service_name/" + entry.getKey());*/
+                /*difference.addOperation(Operations.ADD);
+                difference.addPathSecondModel("parameters/services/" + field + "/" + entry.getKey());*/
+                addDataInDiff(difference, Operations.ADD,
+                        "parameters/",
+                        "parameters/services/" + field + "/" + entry.getKey());
             }
         } else {
-            difference.addOperation(Operations.ADD);
-            difference.addPathSecondModel("parameters/services/" + field);
+            addDataInDiff(difference, Operations.ADD,
+                    "parameters/",
+                    "parameters/services");
+            /*difference.addOperation(Operations.ADD);
+            difference.addPathSecondModel("parameters/services/" + field);*/
         }
     }
 

@@ -2,19 +2,17 @@ package com.netcracker.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.netcracker.models.JSONModel;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 
 import java.io.File;
 import java.io.IOException;
 
 @RestController
+@CrossOrigin("*")
 public class MergeUtilityController {
-    @GetMapping("/string")
-    public String returnString() {
-
-        return "sjfsdhjfsdjsfdkjsdfjksfdkjdsfkj";
-    }
 
     @GetMapping("/json")
     public JSONModel returnJson() throws IOException {
@@ -29,4 +27,29 @@ public class MergeUtilityController {
         System.out.println(jsonModel2);
         return jsonModel1;
     }
+
+    @PostMapping("/upload")
+    public ResponseEntity<?> uploadJSON(@RequestParam MultipartFile file) throws IOException {
+
+        String content = new String(file.getBytes());
+
+        //System.out.println(content);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JSONModel jsonModel1 = objectMapper.readValue(content, JSONModel.class);
+
+        System.out.println(jsonModel1);
+
+        return ResponseEntity.ok(jsonModel1);
+    }
+
+    @PostMapping("/upload1")
+    public String uploadJSON1(@RequestBody JSONModel file) throws IOException {
+
+        System.out.println(file);
+
+
+        return "ok2";
+    }
+
 }
