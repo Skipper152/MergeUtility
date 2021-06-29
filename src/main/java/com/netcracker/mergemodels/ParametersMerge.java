@@ -3,16 +3,11 @@ package com.netcracker.mergemodels;
 public class ParametersMerge {
     // "common" field
     // object, optional
-    private final CommonMerge commonMerge;
+    private CommonMerge commonMerge;
 
     // "services" field
     // object, optional
-    private final ServiceNameMerge services;
-
-    public ParametersMerge(CommonMerge commonMerge, ServiceNameMerge services) {
-        this.commonMerge = commonMerge;
-        this.services = services;
-    }
+    private ServiceNameMerge services;
 
     public CommonMerge getCommonMerge() {
         return commonMerge;
@@ -20,5 +15,13 @@ public class ParametersMerge {
 
     public ServiceNameMerge getServices() {
         return services;
+    }
+
+    public void setCommonMerge(CommonMerge commonMerge) {
+        this.commonMerge = commonMerge;
+    }
+
+    public void setServices(ServiceNameMerge services) {
+        this.services = services;
     }
 }

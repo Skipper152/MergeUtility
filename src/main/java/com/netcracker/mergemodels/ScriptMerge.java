@@ -6,37 +6,27 @@ import com.netcracker.models.Hashes;
 public class ScriptMerge {
     // "service-short-name" field
     // string, optional
-    private final StringWrapper serviceShortName;
+    private StringWrapper serviceShortName;
 
     // "start-point" field
     // string, optional
-    private final StringWrapper startPoint;
+    private StringWrapper startPoint;
 
     // "end-point" field
     // string, optional
-    private final StringWrapper endPoint;
+    private StringWrapper endPoint;
 
     // "script_name" field
     // string, mandatory
-    private final StringWrapper scriptName;
+    private StringWrapper scriptName;
 
     // "hashes" field
     // object, mandatory
-    private final Hashes hashes;
+    private HashesMerge hashesMerge;
 
     // "url" field
     // string, mandatory - direct url of archive with script
-    private final StringWrapper url;
-
-    public ScriptMerge(StringWrapper serviceShortName, StringWrapper startPoint, StringWrapper endPoint,
-                       StringWrapper scriptName, Hashes hashes, StringWrapper url) {
-        this.serviceShortName = serviceShortName;
-        this.startPoint = startPoint;
-        this.endPoint = endPoint;
-        this.scriptName = scriptName;
-        this.hashes = hashes;
-        this.url = url;
-    }
+    private StringWrapper url;
 
     public StringWrapper getServiceShortName() {
         return serviceShortName;
@@ -54,11 +44,35 @@ public class ScriptMerge {
         return scriptName;
     }
 
-    public Hashes getHashes() {
-        return hashes;
+    public HashesMerge getHashes() {
+        return hashesMerge;
     }
 
     public StringWrapper getUrl() {
         return url;
+    }
+
+    public void setServiceShortName(StringWrapper serviceShortName) {
+        this.serviceShortName = serviceShortName;
+    }
+
+    public void setStartPoint(StringWrapper startPoint) {
+        this.startPoint = startPoint;
+    }
+
+    public void setEndPoint(StringWrapper endPoint) {
+        this.endPoint = endPoint;
+    }
+
+    public void setScriptName(StringWrapper scriptName) {
+        this.scriptName = scriptName;
+    }
+
+    public void setHashes(HashesMerge hashesMerge) {
+        this.hashesMerge = hashesMerge;
+    }
+
+    public void setUrl(StringWrapper url) {
+        this.url = url;
     }
 }

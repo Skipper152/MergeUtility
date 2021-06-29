@@ -1,6 +1,7 @@
 package com.netcracker.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.netcracker.mergemodels.JSONComparator;
 import com.netcracker.models.JSONModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,21 +36,25 @@ public class MergeUtilityController {
 
         //System.out.println(content);
 
+
         ObjectMapper objectMapper = new ObjectMapper();
         JSONModel jsonModel1 = objectMapper.readValue(content, JSONModel.class);
 
         System.out.println(jsonModel1);
+        JSONComparator jsonComparator = new JSONComparator(jsonModel1,jsonModel1);
 
-        return ResponseEntity.ok(jsonModel1);
+        return ResponseEntity.ok(jsonComparator.getJsonModelMerge());
     }
 
     @PostMapping("/upload1")
-    public String uploadJSON1(@RequestBody JSONModel file) throws IOException {
+    public ResponseEntity<?> uploadJSON1(@RequestBody JSONModel file) throws IOException {
 
         System.out.println(file);
 
 
-        return "ok2";
+        JSONComparator jsonComparator = new JSONComparator(file,file);
+
+        return ResponseEntity.ok(jsonComparator.getJsonModelMerge());
     }
 
 }

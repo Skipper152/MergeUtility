@@ -7,37 +7,27 @@ import java.util.ArrayList;
 public class ArtifactMerge {
     // "mvn" field
     // array, mandatory
-    private final ArrayList<MVNMerge> mvnMerges;
+    private ArrayList<MVNMerge> mvnMerges;
 
     // "service-short-name" field
     // string, optional
-    private final StringWrapper serviceShortName;
+    private StringWrapper serviceShortName;
 
     // "service_name" field
     // string optional
-    private final StringWrapper serviceName;
+    private StringWrapper serviceName;
 
     // "hashes" field
     // object, mandatory
-    private final HashesMerge hashesMerge;
+    private HashesMerge hashesMerge;
 
     // "file" field
     // array, mandatory - list of direct urls. always contains only one element
-    private final ArrayList<FileMerge> fileMerges;
+    private ArrayList<FileMerge> fileMerges;
 
     // "target_repository" field
     // string, mandatory
-    private final StringWrapper targetRepository;
-
-    public ArtifactMerge(ArrayList<MVNMerge> mvnMerges, StringWrapper serviceShortName, StringWrapper serviceName,
-                         HashesMerge hashesMerge, ArrayList<FileMerge> fileMerges, StringWrapper targetRepository) {
-        this.mvnMerges = mvnMerges;
-        this.serviceShortName = serviceShortName;
-        this.serviceName = serviceName;
-        this.hashesMerge = hashesMerge;
-        this.fileMerges = fileMerges;
-        this.targetRepository = targetRepository;
-    }
+    private StringWrapper targetRepository;
 
     public ArrayList<MVNMerge> getMvnMerges() {
         return mvnMerges;
@@ -61,5 +51,29 @@ public class ArtifactMerge {
 
     public StringWrapper getTargetRepository() {
         return targetRepository;
+    }
+
+    public void setMvnMerges(ArrayList<MVNMerge> mvnMerges) {
+        this.mvnMerges = mvnMerges;
+    }
+
+    public void setServiceShortName(StringWrapper serviceShortName) {
+        this.serviceShortName = serviceShortName;
+    }
+
+    public void setServiceName(StringWrapper serviceName) {
+        this.serviceName = serviceName;
+    }
+
+    public void setHashesMerge(HashesMerge hashesMerge) {
+        this.hashesMerge = hashesMerge;
+    }
+
+    public void setFileMerges(ArrayList<FileMerge> fileMerges) {
+        this.fileMerges = fileMerges;
+    }
+
+    public void setTargetRepository(StringWrapper targetRepository) {
+        this.targetRepository = targetRepository;
     }
 }

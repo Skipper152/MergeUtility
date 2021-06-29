@@ -6,13 +6,13 @@ import com.netcracker.mergemodels.wrapper.StringWrapper;
 public class ApplicationMerge {
     // "name" field
     // string, mandatory
-    private final StringWrapper name;
-
-    public ApplicationMerge(StringWrapper name) {
-        this.name = name;
-    }
+    private StringWrapper name;
 
     public StringWrapper getName() {
         return name;
+    }
+
+    public void setName(StringWrapper name) {
+        this.name = name;
     }
 }

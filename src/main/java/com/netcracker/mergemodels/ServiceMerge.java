@@ -48,23 +48,6 @@ public class ServiceMerge {
     // object, mandatory
     private HashesMerge hashesMerge;
 
-    public ServiceMerge(StringWrapper serviceShortName, StringWrapper serviceName, StringWrapper artifactType,
-                        StringWrapper dockerRegistry, StringWrapper dockerImageName, StringWrapper dockerTag,
-                        BooleanWrapper force, StringWrapper githubRepository, StringWrapper githubBranch,
-                        StringWrapper githubHash, HashesMerge hashesMerge) {
-        this.serviceShortName = serviceShortName;
-        this.serviceName = serviceName;
-        this.artifactType = artifactType;
-        this.dockerRegistry = dockerRegistry;
-        this.dockerImageName = dockerImageName;
-        this.dockerTag = dockerTag;
-        this.force = force;
-        this.githubRepository = githubRepository;
-        this.githubBranch = githubBranch;
-        this.githubHash = githubHash;
-        this.hashesMerge = hashesMerge;
-    }
-
     public StringWrapper getServiceShortName() {
         return serviceShortName;
     }
@@ -107,5 +90,49 @@ public class ServiceMerge {
 
     public HashesMerge getHashesMerge() {
         return hashesMerge;
+    }
+
+    public void setServiceShortName(StringWrapper serviceShortName) {
+        this.serviceShortName = serviceShortName;
+    }
+
+    public void setServiceName(StringWrapper serviceName) {
+        this.serviceName = serviceName;
+    }
+
+    public void setArtifactType(StringWrapper artifactType) {
+        this.artifactType = artifactType;
+    }
+
+    public void setDockerRegistry(StringWrapper dockerRegistry) {
+        this.dockerRegistry = dockerRegistry;
+    }
+
+    public void setDockerImageName(StringWrapper dockerImageName) {
+        this.dockerImageName = dockerImageName;
+    }
+
+    public void setDockerTag(StringWrapper dockerTag) {
+        this.dockerTag = dockerTag;
+    }
+
+    public void setForce(BooleanWrapper force) {
+        this.force = force;
+    }
+
+    public void setGithubRepository(StringWrapper githubRepository) {
+        this.githubRepository = githubRepository;
+    }
+
+    public void setGithubBranch(StringWrapper githubBranch) {
+        this.githubBranch = githubBranch;
+    }
+
+    public void setGithubHash(StringWrapper githubHash) {
+        this.githubHash = githubHash;
+    }
+
+    public void setHashesMerge(HashesMerge hashesMerge) {
+        this.hashesMerge = hashesMerge;
     }
 }

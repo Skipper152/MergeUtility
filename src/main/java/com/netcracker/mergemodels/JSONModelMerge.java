@@ -28,17 +28,6 @@ public class JSONModelMerge {
     // object, mandatory, can be empty
     private ParametersMerge parametersMerge;
 
-    public JSONModelMerge(MetadataMerge metadataMerge, ArrayList<ServiceMerge> serviceMerges,
-                          ArrayList<ArtifactMerge> artifactMerges, ArrayList<ScriptMerge> scriptMerges,
-                                        ArrayList<RPMMerge> rpmMerges, ParametersMerge parametersMerge) {
-        this.metadataMerge = metadataMerge;
-        this.serviceMerges = serviceMerges;
-        this.artifactMerges = artifactMerges;
-        this.scriptMerges = scriptMerges;
-        this.rpmMerges = rpmMerges;
-        this.parametersMerge = parametersMerge;
-    }
-
     public MetadataMerge getMetadataMerge() {
         return metadataMerge;
     }
@@ -61,5 +50,29 @@ public class JSONModelMerge {
 
     public ParametersMerge getParametersMerge() {
         return parametersMerge;
+    }
+
+    public void setMetadataMerge(MetadataMerge metadataMerge) {
+        this.metadataMerge = metadataMerge;
+    }
+
+    public void setServiceMerges(ArrayList<ServiceMerge> serviceMerges) {
+        this.serviceMerges = serviceMerges;
+    }
+
+    public void setArtifactMerges(ArrayList<ArtifactMerge> artifactMerges) {
+        this.artifactMerges = artifactMerges;
+    }
+
+    public void setScriptMerges(ArrayList<ScriptMerge> scriptMerges) {
+        this.scriptMerges = scriptMerges;
+    }
+
+    public void setRpmMerges(ArrayList<RPMMerge> rpmMerges) {
+        this.rpmMerges = rpmMerges;
+    }
+
+    public void setParametersMerge(ParametersMerge parametersMerge) {
+        this.parametersMerge = parametersMerge;
     }
 }

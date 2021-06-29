@@ -5,13 +5,13 @@ import com.netcracker.mergemodels.wrapper.IntegerWrapper;
 public class DescriptionMerge {
     // "version" field
     // integer, mandatory
-    private final IntegerWrapper version;
-
-    public DescriptionMerge(IntegerWrapper version) {
-        this.version = version;
-    }
+    private IntegerWrapper version;
 
     public IntegerWrapper getVersion() {
         return version;
+    }
+
+    public void setVersion(IntegerWrapper version) {
+        this.version = version;
     }
 }

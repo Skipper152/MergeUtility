@@ -7,21 +7,13 @@ import java.util.HashMap;
 public class ServiceNameMerge {
     // "service_name" field
     // string, mandatory
-    private final HashMap<StringWrapper, StringWrapper> serviceName;
+    private HashMap<StringWrapper, StringWrapper> serviceName;
 
     // "service_name_1" field
-    private final HashMap<StringWrapper, StringWrapper> serviceName1;
+    private HashMap<StringWrapper, StringWrapper> serviceName1;
 
     // "service_name_2" field
-    private final HashMap<StringWrapper, StringWrapper> serviceName2;
-
-    public ServiceNameMerge(HashMap<StringWrapper, StringWrapper> serviceName,
-                            HashMap<StringWrapper, StringWrapper> serviceName1,
-                            HashMap<StringWrapper, StringWrapper> serviceName2) {
-        this.serviceName = serviceName;
-        this.serviceName1 = serviceName1;
-        this.serviceName2 = serviceName2;
-    }
+    private HashMap<StringWrapper, StringWrapper> serviceName2;
 
     public HashMap<StringWrapper, StringWrapper> getServiceName() {
         return serviceName;
@@ -33,5 +25,17 @@ public class ServiceNameMerge {
 
     public HashMap<StringWrapper, StringWrapper> getServiceName2() {
         return serviceName2;
+    }
+
+    public void setServiceName(HashMap<StringWrapper, StringWrapper> serviceName) {
+        this.serviceName = serviceName;
+    }
+
+    public void setServiceName1(HashMap<StringWrapper, StringWrapper> serviceName1) {
+        this.serviceName1 = serviceName1;
+    }
+
+    public void setServiceName2(HashMap<StringWrapper, StringWrapper> serviceName2) {
+        this.serviceName2 = serviceName2;
     }
 }

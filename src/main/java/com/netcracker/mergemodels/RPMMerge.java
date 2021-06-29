@@ -6,26 +6,19 @@ import com.netcracker.models.Hashes;
 public class RPMMerge {
     // "url" field
     // string, mandatory - direct url of rpm archive
-    private final StringWrapper url;
+    private StringWrapper url;
 
     // "rpm_repository_name" field
     // string, mandatory
-    private final StringWrapper rpmRepositoryName;
+    private StringWrapper rpmRepositoryName;
 
     // "hashes" field
     // object, mandatory
-    private final Hashes hashes;
+    private HashesMerge hashesMerge;
 
     // "service-short-name" field
     // string optional
-    private final StringWrapper serviceShortName;
-
-    public RPMMerge(StringWrapper url, StringWrapper rpmRepositoryName, Hashes hashes, StringWrapper serviceShortName) {
-        this.url = url;
-        this.rpmRepositoryName = rpmRepositoryName;
-        this.hashes = hashes;
-        this.serviceShortName = serviceShortName;
-    }
+    private StringWrapper serviceShortName;
 
     public StringWrapper getUrl() {
         return url;
@@ -35,11 +28,27 @@ public class RPMMerge {
         return rpmRepositoryName;
     }
 
-    public Hashes getHashes() {
-        return hashes;
+    public HashesMerge getHashes() {
+        return hashesMerge;
     }
 
     public StringWrapper getServiceShortName() {
         return serviceShortName;
+    }
+
+    public void setUrl(StringWrapper url) {
+        this.url = url;
+    }
+
+    public void setRpmRepositoryName(StringWrapper rpmRepositoryName) {
+        this.rpmRepositoryName = rpmRepositoryName;
+    }
+
+    public void setHashesMerge(HashesMerge hashesMerge) {
+        this.hashesMerge = hashesMerge;
+    }
+
+    public void setServiceShortName(StringWrapper serviceShortName) {
+        this.serviceShortName = serviceShortName;
     }
 }

@@ -5,19 +5,13 @@ import com.netcracker.mergemodels.wrapper.StringWrapper;
 public class CommonMerge {
     // "some-param"
     // string, mandatory - parameter value
-    private final StringWrapper someParam;
+    private StringWrapper someParam;
 
     // "some-other-param"
-    private final StringWrapper someOtherParam;
+    private StringWrapper someOtherParam;
 
     // "some-else-param"
-    private final StringWrapper someElseParam;
-
-    public CommonMerge(StringWrapper someParam, StringWrapper someOtherParam, StringWrapper someElseParam) {
-        this.someParam = someParam;
-        this.someOtherParam = someOtherParam;
-        this.someElseParam = someElseParam;
-    }
+    private StringWrapper someElseParam;
 
     public StringWrapper getSomeParam() {
         return someParam;
@@ -29,5 +23,17 @@ public class CommonMerge {
 
     public StringWrapper getSomeElseParam() {
         return someElseParam;
+    }
+
+    public void setSomeParam(StringWrapper someParam) {
+        this.someParam = someParam;
+    }
+
+    public void setSomeOtherParam(StringWrapper someOtherParam) {
+        this.someOtherParam = someOtherParam;
+    }
+
+    public void setSomeElseParam(StringWrapper someElseParam) {
+        this.someElseParam = someElseParam;
     }
 }
