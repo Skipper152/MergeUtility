@@ -46,7 +46,10 @@ public class File extends AbstractModel {
 
         File file = (File) model;
 
-        return this.file.equals(file.getFile());
+        if (this.file != null)
+            return this.file.equals(file.getFile());
+
+        return false;
     }
 
     @Override

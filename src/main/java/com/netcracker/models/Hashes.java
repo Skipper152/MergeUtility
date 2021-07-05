@@ -63,8 +63,16 @@ public class Hashes extends AbstractModel {
 
         Hashes hashes = (Hashes) model;
 
-        return sha1.equals(hashes.getSha1()) &&
-                sha256.equals(hashes.getSha256());
+        if (this.sha1 != null & this.sha256 != null) {
+            return sha1.equals(hashes.getSha1()) &&
+                    sha256.equals(hashes.getSha256());
+        } else if (this.sha1 != null && hashes.getSha256() == null) {
+            return sha1.equals(hashes.getSha1());
+        } else if (this.sha256 != null && hashes.getSha1() == null) {
+            return sha256.equals(hashes.getSha256());
+        }
+
+        return false;
     }
 
     @Override
