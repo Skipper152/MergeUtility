@@ -1,5 +1,7 @@
 package com.netcracker.mergemodels;
 
+import com.netcracker.mergemodels.wrapper.Type;
+
 public class MetadataMerge {
     // "application" field
     // object, mandatory
@@ -8,6 +10,8 @@ public class MetadataMerge {
     // "description" field
     // object, mandatory
     private DescriptionMerge descriptionMerge;
+
+    private Type operationType = Type.NONE;
 
     public ApplicationMerge getApplicationMerge() {
         return applicationMerge;
@@ -23,5 +27,13 @@ public class MetadataMerge {
 
     public void setDescriptionMerge(DescriptionMerge descriptionMerge) {
         this.descriptionMerge = descriptionMerge;
+    }
+
+    public Type getOperationType() {
+        return operationType;
+    }
+
+    public void setOperationType(Type operationType) {
+        this.operationType = operationType;
     }
 }

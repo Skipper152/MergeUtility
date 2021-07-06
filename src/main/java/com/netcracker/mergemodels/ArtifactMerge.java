@@ -1,6 +1,7 @@
 package com.netcracker.mergemodels;
 
 import com.netcracker.mergemodels.wrapper.StringWrapper;
+import com.netcracker.mergemodels.wrapper.Type;
 
 import java.util.ArrayList;
 
@@ -28,6 +29,10 @@ public class ArtifactMerge {
     // "target_repository" field
     // string, mandatory
     private StringWrapper targetRepository;
+
+    private Integer mvn = 0;
+
+    private Type operationType = Type.NONE;
 
     public ArrayList<MVNMerge> getMvnMerges() {
         return mvnMerges;
@@ -75,5 +80,21 @@ public class ArtifactMerge {
 
     public void setTargetRepository(StringWrapper targetRepository) {
         this.targetRepository = targetRepository;
+    }
+
+    public Type getOperationType() {
+        return operationType;
+    }
+
+    public void setOperationType(Type operationType) {
+        this.operationType = operationType;
+    }
+
+    public Integer getMVN() {
+        return mvn;
+    }
+
+    public void setMVN(Integer mvn) {
+        this.mvn = mvn;
     }
 }

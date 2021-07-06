@@ -1,7 +1,7 @@
 package com.netcracker.mergemodels;
 
 import com.netcracker.mergemodels.wrapper.StringWrapper;
-import com.netcracker.models.Hashes;
+import com.netcracker.mergemodels.wrapper.Type;
 
 public class ScriptMerge {
     // "service-short-name" field
@@ -27,6 +27,8 @@ public class ScriptMerge {
     // "url" field
     // string, mandatory - direct url of archive with script
     private StringWrapper url;
+
+    private Type operationType = Type.NONE;
 
     public StringWrapper getServiceShortName() {
         return serviceShortName;
@@ -74,5 +76,21 @@ public class ScriptMerge {
 
     public void setUrl(StringWrapper url) {
         this.url = url;
+    }
+
+    public HashesMerge getHashesMerge() {
+        return hashesMerge;
+    }
+
+    public void setHashesMerge(HashesMerge hashesMerge) {
+        this.hashesMerge = hashesMerge;
+    }
+
+    public Type getOperationType() {
+        return operationType;
+    }
+
+    public void setOperationType(Type operationType) {
+        this.operationType = operationType;
     }
 }

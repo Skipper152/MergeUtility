@@ -1,10 +1,7 @@
 package com.netcracker;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.netcracker.mergemodels.JSONComparator;
 import com.netcracker.models.JSONModel;
-import com.netcracker.operations.Difference;
-import com.netcracker.operations.JSONComparatorSoSo;
 
 
 import java.io.File;
@@ -23,12 +20,12 @@ public class Main {
         for (String str : validator.getLinkedListErrors()) {
             System.out.println(str);
         }*/
-        JSONComparator jsonComparator = new JSONComparator(jsonModel1,jsonModel2);
+        //JSONComparator jsonComparator = new JSONComparator(jsonModel1,jsonModel2);
 
         /*for (Difference diff : jsonComparatorSoSo.getDiffsList())
             System.out.println(diff);*/
 
-        //System.out.println(jsonModel1);
+        System.out.println(jsonModel1);
         //System.out.println(jsonModel2);
     }
 }

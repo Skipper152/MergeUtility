@@ -1,6 +1,7 @@
 package com.netcracker.mergemodels;
 
 import com.netcracker.mergemodels.wrapper.StringWrapper;
+import com.netcracker.mergemodels.wrapper.Type;
 
 public class HashesMerge {
     // "sha1" field
@@ -10,6 +11,12 @@ public class HashesMerge {
     // "sha256" field
     // string, mandatory
     private StringWrapper sha256;
+
+    private Type operationType = Type.NONE;
+
+    public HashesMerge() {
+
+    }
 
     public HashesMerge(StringWrapper sha1, StringWrapper sha256) {
         this.sha1 = sha1;
@@ -22,5 +29,21 @@ public class HashesMerge {
 
     public StringWrapper getSha256() {
         return sha256;
+    }
+
+    public Type getOperationType() {
+        return operationType;
+    }
+
+    public void setSha1(StringWrapper sha1) {
+        this.sha1 = sha1;
+    }
+
+    public void setSha256(StringWrapper sha256) {
+        this.sha256 = sha256;
+    }
+
+    public void setOperationType(Type operationType) {
+        this.operationType = operationType;
     }
 }

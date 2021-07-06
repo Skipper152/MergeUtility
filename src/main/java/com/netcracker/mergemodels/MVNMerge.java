@@ -1,6 +1,7 @@
 package com.netcracker.mergemodels;
 
 import com.netcracker.mergemodels.wrapper.StringWrapper;
+import com.netcracker.mergemodels.wrapper.Type;
 
 public class MVNMerge {
     // "groupId" field
@@ -34,6 +35,8 @@ public class MVNMerge {
     // "hashes" field
     // object, mandatory
     private HashesMerge hashesMerge;
+
+    private Type operationType = Type.NONE;
 
     public StringWrapper getGroupId() {
         return groupId;
@@ -97,5 +100,13 @@ public class MVNMerge {
 
     public void setHashesMerge(HashesMerge hashesMerge) {
         this.hashesMerge = hashesMerge;
+    }
+
+    public Type getOperationType() {
+        return operationType;
+    }
+
+    public void setOperationType(Type operationType) {
+        this.operationType = operationType;
     }
 }

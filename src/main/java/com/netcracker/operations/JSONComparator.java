@@ -1,6 +1,6 @@
 package com.netcracker.operations;
-import com.netcracker.mergemodels2.*;
-import com.netcracker.mergemodels2.wrapper.*;
+import com.netcracker.mergemodels.*;
+import com.netcracker.mergemodels.wrapper.*;
 import com.netcracker.models.*;
 
 import java.util.ArrayList;
@@ -862,24 +862,24 @@ public class JSONComparator {
 
     private void compareParameters(Parameters parametersFirst, Parameters parametersSecond, ParametersMerge parametersMerge) {
         parametersMerge.setCommonMerge(new CommonMerge());
-        parametersMerge.setServices(new ServiceNameMerge());
+        parametersMerge.setServices(new ServicesMerge());
 
         if (parametersFirst != null && parametersSecond != null) {
             // comparison common fields
             compareCommon(parametersFirst.getCommon(), parametersSecond.getCommon(), parametersMerge.getCommonMerge());
             // comparison services fields
-            //compareServiceName(parametersFirst.getServices(), parametersSecond.getServices(), parametersMerge.getServices());
+            compareServiceName(parametersFirst.getServices(), parametersSecond.getServices(), parametersMerge.getServices());
         } else if (parametersFirst != null) {
             // comparison common fields
             compareCommon(parametersFirst.getCommon(), null, parametersMerge.getCommonMerge());
             // comparison services fields
-            //compareServiceName(parametersFirst.getServices(), null, parametersMerge.getServices());
+            compareServiceName(parametersFirst.getServices(), null, parametersMerge.getServices());
             parametersMerge.setOperationType(Type.DELETED);
         } else if (parametersSecond != null) {
             // comparison common fields
             compareCommon(null, parametersSecond.getCommon(), parametersMerge.getCommonMerge());
             // comparison services fields
-            //compareServiceName(null, parametersSecond.getServices(), parametersMerge.getServices());
+            compareServiceName(null, parametersSecond.getServices(), parametersMerge.getServices());
             parametersMerge.setOperationType(Type.ADDED);
         }
     }
@@ -950,74 +950,96 @@ public class JSONComparator {
         }
     }
 
-    private void compareServiceName(ServiceName serviceNameFirst, ServiceName serviceNameSecond, ServiceNameMerge serviceNameMerge) {
+    private void compareServiceName(ServiceName serviceNameFirst, ServiceName serviceNameSecond, ServicesMerge servicesMerge) {
 
         if (serviceNameFirst != null && serviceNameSecond != null) {
-            serviceNameMerge.setServiceName(compareMapsServiceName(serviceNameFirst.getServiceName(), serviceNameSecond.getServiceName()));
-            serviceNameMerge.setServiceName1(compareMapsServiceName(serviceNameFirst.getServiceName1(), serviceNameSecond.getServiceName1()));
-            serviceNameMerge.setServiceName2(compareMapsServiceName(serviceNameFirst.getServiceName2(), serviceNameSecond.getServiceName2()));
+            servicesMerge.setServiceName(compareMapsServiceName(serviceNameFirst.getServiceName(), serviceNameSecond.getServiceName()));
+            servicesMerge.setServiceName1(compareMapsServiceName(serviceNameFirst.getServiceName1(), serviceNameSecond.getServiceName1()));
+            servicesMerge.setServiceName2(compareMapsServiceName(serviceNameFirst.getServiceName2(), serviceNameSecond.getServiceName2()));
         } else if (serviceNameFirst != null) {
-            serviceNameMerge.setServiceName(serviceNameNull(serviceNameFirst.getServiceName(), null));
-            serviceNameMerge.setServiceName1(serviceNameNull(serviceNameFirst.getServiceName1(), null));
-            serviceNameMerge.setServiceName2(serviceNameNull(serviceNameFirst.getServiceName2(), null));
-            serviceNameMerge.setOperationType(Type.DELETED);
+            servicesMerge.setServiceName(compareMapsServiceName(serviceNameFirst.getServiceName(), null));
+            servicesMerge.setServiceName1(compareMapsServiceName(serviceNameFirst.getServiceName1(), null));
+            servicesMerge.setServiceName2(compareMapsServiceName(serviceNameFirst.getServiceName2(), null));
+            servicesMerge.setOperationType(Type.DELETED);
         } else if (serviceNameSecond != null) {
-            serviceNameMerge.setServiceName(serviceNameNull(null, serviceNameSecond.getServiceName()));
-            serviceNameMerge.setServiceName1(serviceNameNull(null, serviceNameSecond.getServiceName1()));
-            serviceNameMerge.setServiceName2(serviceNameNull(null, serviceNameSecond.getServiceName2()));
-            serviceNameMerge.setOperationType(Type.ADDED);
+            servicesMerge.setServiceName(compareMapsServiceName(null, serviceNameSecond.getServiceName()));
+            servicesMerge.setServiceName1(compareMapsServiceName(null, serviceNameSecond.getServiceName1()));
+            servicesMerge.setServiceName2(compareMapsServiceName(null, serviceNameSecond.getServiceName2()));
+            servicesMerge.setOperationType(Type.ADDED);
         }
     }
 
-    private HashMap<StringWrapper, StringWrapper> compareMapsServiceName(HashMap<String,String> firstMap, HashMap<String,String> secondMap) {
-        HashMap<StringWrapper, StringWrapper> mergeMap = new HashMap<>();
+    private ArrayList<ServiceStringWrapper> compareMapsServiceName(HashMap<String,String> firstMap, HashMap<String,String> secondMap) {
+        ArrayList<ServiceStringWrapper> mergeArr = new ArrayList<>();
+
         if (firstMap != null && secondMap != null) {
             for (Map.Entry<String, String> entry : firstMap.entrySet()) {
+                ServiceStringWrapper serviceStringWrapper = new ServiceStringWrapper();
+
                 if (secondMap.containsKey(entry.getKey())) {
+                    serviceStringWrapper.setOldKey(entry.getKey());
+                    serviceStringWrapper.setNewKey(entry.getKey());
+                    serviceStringWrapper.setOldValue(entry.getValue());
+                    serviceStringWrapper.setNewValue(secondMap.get(entry.getKey()));
                     if (entry.getValue() != null && secondMap.get(entry.getKey()) != null) {
                         if (!entry.getValue().equals(secondMap.get(entry.getKey()))) {
-                            mergeMap.put(new StringWrapper(entry.getKey(), entry.getKey(), Type.NONE),
-                                         new StringWrapper(entry.getValue(), secondMap.get(entry.getKey()), Type.UPDATED));
+                            serviceStringWrapper.setOperationType(Type.UPDATED);
                         } else {
-                            mergeMap.put(new StringWrapper(entry.getKey(), entry.getKey(), Type.NONE),
-                                    new StringWrapper(entry.getValue(), secondMap.get(entry.getKey()), Type.NONE));
+                            serviceStringWrapper.setOperationType(Type.NONE);
                         }
-                    } else if (entry.getValue() != null) {
-                        mergeMap.put(new StringWrapper(entry.getKey(), entry.getKey(), Type.NONE),
-                                new StringWrapper(entry.getValue(), secondMap.get(entry.getKey()), Type.DELETED));
-
-                    } else if (secondMap.get(entry.getKey()) != null) {
-                        mergeMap.put(new StringWrapper(entry.getKey(), entry.getKey(), Type.NONE),
-                                new StringWrapper(entry.getValue(), secondMap.get(entry.getKey()), Type.ADDED));
                     }
                 } else {
-                    mergeMap.put(new StringWrapper(entry.getKey(), null, Type.DELETED),
-                                 new StringWrapper(entry.getValue(), null, Type.DELETED));
+                    serviceStringWrapper.setOldKey(entry.getKey());
+                    serviceStringWrapper.setOperationType(Type.DELETED);
+                    serviceStringWrapper.setOldValue(entry.getValue());
                 }
+
+                mergeArr.add(serviceStringWrapper);
             }
 
             for (Map.Entry<String, String> entry : secondMap.entrySet()) {
+                ServiceStringWrapper serviceStringWrapper = new ServiceStringWrapper();
+                boolean flag = false;
+
                 if (!firstMap.containsKey(entry.getKey())) {
-                    mergeMap.put(new StringWrapper(null, entry.getKey(), Type.ADDED),
-                                 new StringWrapper(null, entry.getValue(), Type.ADDED));
+                    flag = true;
+                    serviceStringWrapper.setNewKey(entry.getKey());
+                    serviceStringWrapper.setOperationType(Type.ADDED);
+                    serviceStringWrapper.setNewValue(entry.getValue());
+                }
+
+                if (flag) {
+                    mergeArr.add(serviceStringWrapper);
                 }
             }
         } else if (firstMap != null) {
             for (Map.Entry<String, String> entry : firstMap.entrySet()) {
-                mergeMap.put(new StringWrapper(entry.getKey(), null, Type.DELETED),
-                             new StringWrapper(entry.getValue(), null, Type.DELETED));
+                ServiceStringWrapper serviceStringWrapper = new ServiceStringWrapper();
+
+                serviceStringWrapper.setOldKey(entry.getKey());
+                serviceStringWrapper.setOldValue(entry.getValue());
+                serviceStringWrapper.setOperationType(Type.DELETED);
+
+                mergeArr.add(serviceStringWrapper);
             }
         } else if (secondMap != null) {
             for (Map.Entry<String, String> entry : secondMap.entrySet()) {
-                mergeMap.put(new StringWrapper(null, entry.getKey(), Type.DELETED),
-                        new StringWrapper(null, entry.getValue(), Type.DELETED));
+                ServiceStringWrapper serviceStringWrapper = new ServiceStringWrapper();
+
+                serviceStringWrapper.setNewKey(entry.getKey());
+                serviceStringWrapper.setNewValue(entry.getValue());
+                serviceStringWrapper.setOperationType(Type.ADDED);
+
+                mergeArr.add(serviceStringWrapper);
             }
+        } else {
+            return null;
         }
-        return mergeMap;
+        return mergeArr;
     }
 
-    private HashMap<StringWrapper, StringWrapper> serviceNameNull(HashMap<String,String> firstMap, HashMap<String,String> secondMap) {
-        HashMap<StringWrapper, StringWrapper> mergeMap = new HashMap<>();
+    /*private ArrayList<ServiceStringWrapper> serviceNameNull(HashMap<String,String> firstMap, HashMap<String,String> secondMap) {
+        ArrayList<ServiceStringWrapper> mergeMap = new HashMap<>();
         if (firstMap != null && secondMap == null) {
             for (Map.Entry<String, String> entry : firstMap.entrySet()) {
                 mergeMap.put(new StringWrapper(entry.getKey(), null, Type.DELETED),
@@ -1032,7 +1054,7 @@ public class JSONComparator {
             return mergeMap;
         }
         return null;
-    }
+    }*/
 
     private HashesMerge compareHashes(Hashes hashesFirst, Hashes hashesSecond) {
         HashesMerge hashesMerge = new HashesMerge();
@@ -1074,10 +1096,10 @@ public class JSONComparator {
             hashesMerge.setOperationType(Type.ADDED);
 
             if (hashesSecond.getSha1() != null) {
-                hashesMerge.setSha1(new StringWrapper(hashesSecond.getSha1(), null, Type.ADDED));
+                hashesMerge.setSha1(new StringWrapper(null, hashesSecond.getSha1(), Type.ADDED));
             }
             if (hashesSecond.getSha256() != null) {
-                hashesMerge.setSha256(new StringWrapper(hashesSecond.getSha256(), null, Type.ADDED));
+                hashesMerge.setSha256(new StringWrapper(null, hashesSecond.getSha256(), Type.ADDED));
             }
         }
 

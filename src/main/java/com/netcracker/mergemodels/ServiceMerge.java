@@ -2,6 +2,7 @@ package com.netcracker.mergemodels;
 
 import com.netcracker.mergemodels.wrapper.BooleanWrapper;
 import com.netcracker.mergemodels.wrapper.StringWrapper;
+import com.netcracker.mergemodels.wrapper.Type;
 
 public class ServiceMerge {
     // "service-short-name" field
@@ -47,6 +48,8 @@ public class ServiceMerge {
     // "hashes" field
     // object, mandatory
     private HashesMerge hashesMerge;
+
+    private Type operationType = Type.NONE;
 
     public StringWrapper getServiceShortName() {
         return serviceShortName;
@@ -134,5 +137,13 @@ public class ServiceMerge {
 
     public void setHashesMerge(HashesMerge hashesMerge) {
         this.hashesMerge = hashesMerge;
+    }
+
+    public Type getOperationType() {
+        return operationType;
+    }
+
+    public void setOperationType(Type operationType) {
+        this.operationType = operationType;
     }
 }

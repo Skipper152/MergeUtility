@@ -1,6 +1,7 @@
 package com.netcracker.mergemodels;
 
 import com.netcracker.mergemodels.wrapper.StringWrapper;
+import com.netcracker.mergemodels.wrapper.Type;
 
 public class CommonMerge {
     // "some-param"
@@ -12,6 +13,8 @@ public class CommonMerge {
 
     // "some-else-param"
     private StringWrapper someElseParam;
+
+    private Type operationType = Type.NONE;
 
     public StringWrapper getSomeParam() {
         return someParam;
@@ -35,5 +38,13 @@ public class CommonMerge {
 
     public void setSomeElseParam(StringWrapper someElseParam) {
         this.someElseParam = someElseParam;
+    }
+
+    public Type getOperationType() {
+        return operationType;
+    }
+
+    public void setOperationType(Type operationType) {
+        this.operationType = operationType;
     }
 }

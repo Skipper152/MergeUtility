@@ -1,7 +1,7 @@
 package com.netcracker.mergemodels;
 
 import com.netcracker.mergemodels.wrapper.StringWrapper;
-import com.netcracker.models.Hashes;
+import com.netcracker.mergemodels.wrapper.Type;
 
 public class RPMMerge {
     // "url" field
@@ -19,6 +19,8 @@ public class RPMMerge {
     // "service-short-name" field
     // string optional
     private StringWrapper serviceShortName;
+
+    private Type operationType = Type.NONE;
 
     public StringWrapper getUrl() {
         return url;
@@ -50,5 +52,17 @@ public class RPMMerge {
 
     public void setServiceShortName(StringWrapper serviceShortName) {
         this.serviceShortName = serviceShortName;
+    }
+
+    public HashesMerge getHashesMerge() {
+        return hashesMerge;
+    }
+
+    public Type getOperationType() {
+        return operationType;
+    }
+
+    public void setOperationType(Type operationType) {
+        this.operationType = operationType;
     }
 }

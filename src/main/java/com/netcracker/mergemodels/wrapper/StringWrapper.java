@@ -22,4 +22,30 @@ public class StringWrapper {
     public Type getOperationType() {
         return operationType;
     }
+
+    @Override
+    public int hashCode() {
+        int result = 17;
+        result = 31 * result + oldValue.hashCode();
+        result = 31 * result + newValue.hashCode();
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+
+        if (obj == null)
+            return false;
+
+        if (this.getClass() != obj.getClass())
+            return false;
+
+        StringWrapper str = (StringWrapper) obj;
+
+        return oldValue.equals(str.getOldValue()) &&
+                newValue.equals(str.getNewValue());
+    }
+
 }

@@ -4,7 +4,7 @@ import com.netcracker.models.*;
 
 import java.util.*;
 
-public class Validator {
+public class JSONValidator {
     LinkedList<String> linkedListErrors = new LinkedList<>();
 
     public void validationJSON(JSONModel jsonModel) {
