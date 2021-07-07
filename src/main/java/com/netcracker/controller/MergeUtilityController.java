@@ -23,11 +23,6 @@ public class MergeUtilityController {
     public ResponseEntity<?> uploadJSON(@RequestParam("fileFirst") MultipartFile fileFirst,
                                         @RequestParam("fileSecond") MultipartFile fileSecond) throws IOException {
 
-        /*if (fileFirst.getOriginalFilename() == null || fileSecond.getOriginalFilename() == null) {
-            return ResponseEntity.badRequest().body((fileFirst.isEmpty() && fileSecond.isEmpty()) ?
-                    ("The files are empty!") : ((fileFirst.isEmpty()) ? ("The first file is empty!") : ("The file are empty!")));
-        }*/
-
         String contentFirst = new String(fileFirst.getBytes());
         String contentSecond = new String(fileSecond.getBytes());
 
