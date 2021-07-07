@@ -3,12 +3,16 @@ package com.netcracker.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.netcracker.operations.JSONComparator;
 import com.netcracker.models.JSONModel;
+import com.netcracker.operations.JSONValidator;
+import com.netcracker.operations.ValidationResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.logging.Logger;
 
 
 @RestController
@@ -19,16 +23,51 @@ public class MergeUtilityController {
     public ResponseEntity<?> uploadJSON(@RequestParam("fileFirst") MultipartFile fileFirst,
                                         @RequestParam("fileSecond") MultipartFile fileSecond) throws IOException {
 
+        /*if (fileFirst.getOriginalFilename() == null || fileSecond.getOriginalFilename() == null) {
+            return ResponseEntity.badRequest().body((fileFirst.isEmpty() && fileSecond.isEmpty()) ?
+                    ("The files are empty!") : ((fileFirst.isEmpty()) ? ("The first file is empty!") : ("The file are empty!")));
+        }*/
+
         String contentFirst = new String(fileFirst.getBytes());
         String contentSecond = new String(fileSecond.getBytes());
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        JSONModel jsonModel1 = objectMapper.readValue(contentFirst, JSONModel.class);
-        JSONModel jsonModel2 = objectMapper.readValue(contentSecond, JSONModel.class);
+        //Logger logger = Logger.getLogger(MergeUtilityController.class.getName());
+        //logger.warning(contentFirst);
+        //logger.warning(contentSecond);
 
-        JSONComparator jsonComparator = new JSONComparator(jsonModel1,jsonModel2);
+        if ("".equals(contentFirst) || "".equals(contentSecond)) {
+            return ResponseEntity.badRequest().body(("".equals(contentFirst) && "".equals(contentSecond)) ?
+                    ("The files are empty!") : (("".equals(contentFirst)) ? ("The first file is empty!") : ("The file are empty!")));
+        }
 
-        return ResponseEntity.ok(jsonComparator.getJsonModelMerge());
+        JSONModel jsonModel1;
+        JSONModel jsonModel2;
+
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            jsonModel1 = objectMapper.readValue(contentFirst, JSONModel.class);
+            jsonModel2 = objectMapper.readValue(contentSecond, JSONModel.class);
+        } catch (IOException e) {
+            return ResponseEntity.badRequest().body("Mapping the file is not possible!");
+        }
+
+        JSONValidator jsonValidatorFirst = new JSONValidator();
+        JSONValidator jsonValidatorSecond = new JSONValidator();
+        jsonValidatorFirst.validationJSON(jsonModel1);
+        jsonValidatorSecond.validationJSON(jsonModel2);
+        LinkedList<String> errorsFirstFile = jsonValidatorFirst.getLinkedListErrors();
+        LinkedList<String> errorsSecondFile = jsonValidatorSecond.getLinkedListErrors();
+
+        if (!errorsFirstFile.isEmpty() || !errorsSecondFile.isEmpty()) {
+            return ResponseEntity.badRequest().body(new ValidationResponse(errorsFirstFile, errorsSecondFile));
+        }
+
+        try {
+            JSONComparator jsonComparator = new JSONComparator(jsonModel1, jsonModel2);
+            return ResponseEntity.ok(jsonComparator.getJsonModelMerge());
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body("Unknown error!");
+        }
     }
 
     /*@PostMapping("/upload1")
