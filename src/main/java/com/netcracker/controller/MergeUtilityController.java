@@ -12,7 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.LinkedList;
-import java.util.logging.Logger;
 
 
 @RestController
@@ -25,10 +24,6 @@ public class MergeUtilityController {
 
         String contentFirst = new String(fileFirst.getBytes());
         String contentSecond = new String(fileSecond.getBytes());
-
-        //Logger logger = Logger.getLogger(MergeUtilityController.class.getName());
-        //logger.warning(contentFirst);
-        //logger.warning(contentSecond);
 
         if ("".equals(contentFirst) || "".equals(contentSecond)) {
             return ResponseEntity.badRequest().body(("".equals(contentFirst) && "".equals(contentSecond)) ?
@@ -64,19 +59,4 @@ public class MergeUtilityController {
             return ResponseEntity.badRequest().body("Unknown error!");
         }
     }
-
-    /*@PostMapping("/upload1")
-    public ResponseEntity<?> uploadJSON1(@RequestBody JSONModel file) throws IOException {
-
-        System.out.println(file);
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        JSONModel jsonModel2 = objectMapper.readValue(new File("C:\\Users\\Skipper\\IdeaProjects\\2021\\03\\MergeUtility\\src\\main\\resources\\json-files\\1.json"), JSONModel.class);
-        System.out.println(jsonModel2);
-
-        JSONComparator jsonComparator = new JSONComparator(file,jsonModel2);
-
-        return ResponseEntity.ok(jsonComparator.getJsonModelMerge());
-    }*/
-
 }
