@@ -436,7 +436,7 @@ public class JSONComparator {
                     ArtifactMerge artifactMerge = new ArtifactMerge();
                     artifactMerge.setMVN(1);
                     artifactMerge.setMvnMerges(mvnMerges);
-                    artifactMerge.setTargetRepository(new StringWrapper(null, second.getTargetRepository(), Type.DELETED));
+                    artifactMerge.setTargetRepository(new StringWrapper(null, second.getTargetRepository(), Type.ADDED));
                     artifactMerge.setOperationType(Type.ADDED);
                     artifactMerges.add(artifactMerge);
                 }
