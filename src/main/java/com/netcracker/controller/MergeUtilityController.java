@@ -27,7 +27,8 @@ public class MergeUtilityController {
 
         if ("".equals(contentFirst) || "".equals(contentSecond)) {
             return ResponseEntity.badRequest().body(("".equals(contentFirst) && "".equals(contentSecond)) ?
-                    ("The files are empty!") : (("".equals(contentFirst)) ? ("The first file is empty!") : ("The second file is empty!")));
+                    ("The files are empty!") : (("".equals(contentFirst)) ?
+                    ("The first file is empty!") : ("The second file is empty!")));
         }
 
         JSONModel jsonModel1;
