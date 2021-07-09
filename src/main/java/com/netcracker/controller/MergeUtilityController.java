@@ -56,7 +56,7 @@ public class MergeUtilityController {
             JSONComparator jsonComparator = new JSONComparator(jsonModel1, jsonModel2);
             return ResponseEntity.ok(jsonComparator.getJsonModelMerge());
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body("Unknown error!");
+            return ResponseEntity.badRequest().body("Error in comparison!");
         }
     }
 }
